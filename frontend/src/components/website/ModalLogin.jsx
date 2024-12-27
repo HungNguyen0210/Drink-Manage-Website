@@ -40,7 +40,6 @@ const LoginPage = () => {
         if (token) {
           Cookies.set("jwtToken", token, { expires: 7, path: "/" });
           const decoded = decodeJWT(token);
-          console.log("Decoded Token:", decoded);
           if (
             decoded.role.includes("admin") ||
             decoded.role.includes("staff")
@@ -98,8 +97,6 @@ const LoginPage = () => {
       setLoading(false); // Reset loading state after request completes
     }
   };
-
-
 
   return (
     <div className="mt-2 flex min-h-[85%] justify-center bg-white">

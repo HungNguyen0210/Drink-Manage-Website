@@ -2,12 +2,13 @@ import express from "express";
 import {
   createOrder,
   getOrder,
+  getOrderByToken,
   updateOrder,
 } from "../controllers/order.controller.js";
-import { upload } from "../middleware/multer.js";
 
 const router = express.Router();
 
+router.get("/token", getOrderByToken);
 router.get("/", getOrder);
 router.post("/", createOrder);
 router.put("/:id", updateOrder);

@@ -2,6 +2,7 @@ import Order from "../models/order.model.js";
 import Product from "../models/product.model.js";
 import Coupon from "../models/coupon.model.js";
 import { ObjectId } from "mongodb";
+import jwt from "jsonwebtoken";
 
 export const getOrder = async (req, res) => {
   try {
@@ -36,6 +37,17 @@ export const getOrder = async (req, res) => {
 
 export const createOrder = async (req, res) => {
   try {
+    const token = req.cookies.jwtToken; // Lấy token từ cookie
+    console.log("Token: ", token);
+    let accountId = null;
+
+    // Kiểm tra token để lấy accountId nếu người dùng đăng nhập
+    if (token) {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      accountId = decoded.id; // Lấy accountId từ token
+      console.log("decoded: ", decoded);
+    }
+
     const {
       name,
       address,
@@ -117,6 +129,7 @@ export const createOrder = async (req, res) => {
       discount: discount || 0,
       finalPrice,
       cart: updatedCart,
+      accountId,
     });
 
     await newOrder.save();
@@ -155,6 +168,51 @@ export const updateOrder = async (req, res) => {
     });
   } catch (error) {
     console.log("Lỗi khi cập nhật đơn hàng: ", error);
+    res.status(500).json({ message: "Lỗi server" });
+  }
+};
+
+export const getOrderByToken = async (req, res) => {
+  try {
+    const token = req.cookies.jwtToken; // Lấy token từ cookie
+    let accountId = null;
+
+    // Kiểm tra token để lấy accountId nếu người dùng đăng nhập
+    if (token) {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      accountId = decoded.id; // Lấy accountId từ token
+    }
+
+    if (!accountId) {
+      return res.status(401).json({ message: "Vui lòng đăng nhập!" });
+    }
+
+    // Tìm các đơn hàng của người dùng dựa trên accountId
+    const orders = await Order.find({ accountId: accountId })
+      .populate({
+        path: "cart.product",
+        select: "name image",
+      })
+      .sort({ createdAt: -1 })
+      .lean(); // Sử dụng lean để đảm bảo trả về plain objects
+
+    const ordersWithFullImagePath = orders.map((order) => ({
+      ...order,
+      cart: order.cart.map((item) => ({
+        ...item,
+        product: {
+          ...item.product,
+          image: `http://localhost:5000/assets/${item.product.image}`,
+        },
+      })),
+    }));
+
+    res.status(200).json({
+      message: "Lấy danh sách đơn hàng thành công!",
+      data: ordersWithFullImagePath,
+    });
+  } catch (error) {
+    console.log("Lỗi khi lấy danh sách đơn hàng: ", error);
     res.status(500).json({ message: "Lỗi server" });
   }
 };

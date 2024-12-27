@@ -1,86 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios"; // Import axios
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faXmark } from "@fortawesome/free-solid-svg-icons";
 import imgfood1 from "../../../../../backend/assets/Screenshot_2024-11-18_231527-removebg-preview.png";
-
-// Data Placeholder
-const orderDataPlaceholder = [
-  {
-    _id: "order12345",
-    name: "Nguyen Van A",
-    createdAt: "2024-12-25T10:30:00.000Z",
-    address: "123 Đường ABC, Quận 1, TP.HCM",
-    number: "0123456789",
-    email: "nguyenvana@example.com",
-    note: "Giao hàng trước 12h trưa",
-    paymentMethod: "COD",
-    discount: 10000,
-    finalPrice: 200000,
-    cart: [
-      {
-        product: {
-          _id: "product001",
-          name: "Bánh Mì Thịt Nướng",
-          image: imgfood1,
-          price: 50000,
-        },
-        quantity: 2,
-        totalPrice: 100000,
-      },
-      {
-        product: {
-          _id: "product002",
-          name: "Cà Phê Sữa Đá",
-          image: imgfood1,
-        },
-        quantity: 2,
-        totalPrice: 60000,
-      },
-      {
-        product: {
-          _id: "product002",
-          name: "Cà Phê Sữa Đá",
-          image: imgfood1,
-        },
-        quantity: 2,
-        totalPrice: 60000,
-      },
-      {
-        product: {
-          _id: "product002",
-          name: "Cà Phê Sữa Đá",
-          image: imgfood1,
-        },
-        quantity: 2,
-        totalPrice: 60000,
-      },
-    ],
-  },
-  {
-    _id: "order67890",
-    name: "Tran Thi B",
-    createdAt: "2024-12-24T08:45:00.000Z",
-    address: "456 Đường DEF, Quận 7, TP.HCM",
-    number: "0987654321",
-    email: "tranthib@example.com",
-    note: "",
-    paymentMethod: "Online Payment",
-    discount: 0,
-    finalPrice: 150000,
-    cart: [
-      {
-        product: {
-          _id: "product003",
-          name: "Phở Bò Tái",
-          image: imgfood1,
-          price: 75000,
-        },
-        quantity: 2,
-        totalPrice: 150000,
-      },
-    ],
-  },
-];
 
 // Modal Component
 const OrderDetailModal = ({ order, onClose }) => {
@@ -237,7 +159,20 @@ const OrderDetailModal = ({ order, onClose }) => {
 
 // Main Component
 const OrderHistory = () => {
+  const [orders, setOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
+
+  useEffect(() => {
+    // Fetch orders from the API
+    axios
+      .get("http://localhost:5000/api/orders/token", { withCredentials: true }) // Replace with your API endpoint
+      .then((response) => {
+        setOrders(response.data.data); // Set the orders data
+      })
+      .catch((error) => {
+        console.error("Error fetching orders:", error);
+      });
+  }, []);
 
   const handleViewDetails = (order) => {
     setSelectedOrder(order);
@@ -250,7 +185,7 @@ const OrderHistory = () => {
   return (
     <div className="order-history">
       <h2 className="mb-4 text-2xl font-bold">Lịch Sử Đơn Hàng</h2>
-      {orderDataPlaceholder.length === 0 ? (
+      {orders.length === 0 ? (
         <div>Bạn chưa có đơn hàng nào.</div>
       ) : (
         <div className="overflow-x-auto rounded-lg shadow-md">
@@ -266,7 +201,7 @@ const OrderHistory = () => {
               </tr>
             </thead>
             <tbody>
-              {orderDataPlaceholder.map((order) => (
+              {orders.map((order) => (
                 <tr key={order._id} className="border-b">
                   <td className="px-4 py-6 text-center">{order.email}</td>
                   <td className="px-4 py-6 text-center">

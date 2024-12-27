@@ -190,6 +190,9 @@ const PaymentPage = () => {
       const response = await axios.post(
         "http://localhost:5000/api/orders",
         orderData,
+        {
+          withCredentials: true, // Cho phép gửi cookie
+        },
       );
       toast(response.data.message);
       localStorage.removeItem("tempCart"); //làm trống giỏ hàng

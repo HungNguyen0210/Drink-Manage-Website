@@ -21,6 +21,11 @@ const orderSchema = new mongoose.Schema({
     },
   ],
   createdAt: { type: Date, default: Date.now },
+  accountId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Account", // Liên kết với bảng Account
+    default: null, // Cho phép giá trị null nếu không đăng nhập
+  },
 });
 
 const Order = mongoose.model("Order", orderSchema);
