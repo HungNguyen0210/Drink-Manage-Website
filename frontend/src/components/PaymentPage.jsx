@@ -4,16 +4,40 @@ import { useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faCartPlus } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
+import { decodeJWT } from "./utils/jwtUtils";
+import Cookies from "js-cookie";
 
 const PaymentPage = () => {
   const location = useLocation();
   const { cartItems: initialCartItems } = location.state || {};
-
+  const [accountData, setAccountData] = useState(null);
   const [cartItems, setCartItems] = useState(initialCartItems || []);
   const [selectedPayment, setSelectedPayment] = useState(1);
   const [couponCode, setCouponCode] = useState("");
   const [discount, setDiscount] = useState(0);
   const [validCoupons, setValidCoupons] = useState([]); // Dữ liệu coupons từ API
+
+  useEffect(() => {
+    const fetchAccountData = async () => {
+      try {
+        const token = Cookies.get("jwtToken");
+
+        const decoded = decodeJWT(token);
+        const accountId = decoded?.id; // Lấy ID từ token
+
+        // Gửi yêu cầu API để lấy thông tin tài khoản
+        const response = await axios.get(
+          `http://localhost:5000/api/accounts/${accountId}`,
+        );
+
+        setAccountData(response.data.data); // Lưu dữ liệu tài khoản vào state
+      } catch (error) {
+        console.error("Lỗi khi lấy thông tin tài khoản:", error);
+      }
+    };
+
+    fetchAccountData();
+  }, []);
 
   useEffect(() => {
     // Gọi API để lấy danh sách coupon
@@ -222,6 +246,7 @@ const PaymentPage = () => {
                 className="h-16 w-full rounded-2xl border border-gray-300 p-2"
                 placeholder="Họ tên"
                 required
+                value={accountData?.username || ""}
               />
             </div>
             <div className="input-payment">
@@ -230,7 +255,6 @@ const PaymentPage = () => {
                 name="address"
                 className="h-16 w-full rounded-2xl border border-gray-300 p-2 pt-3"
                 placeholder="Địa chỉ"
-                required
               />
             </div>
             <div className="flex h-16 justify-center space-x-4">
@@ -239,14 +263,14 @@ const PaymentPage = () => {
                 name="number"
                 className="w-1/2 rounded-2xl border border-gray-300 p-2"
                 placeholder="Số điện thoại"
-                required
+                value={accountData?.numbers || ""}
               />
               <input
                 type="email"
                 name="email"
                 className="w-1/2 rounded-2xl border border-gray-300 p-2"
                 placeholder="Email"
-                required
+                value={accountData?.gmail || ""}
               />
             </div>
             <div>
