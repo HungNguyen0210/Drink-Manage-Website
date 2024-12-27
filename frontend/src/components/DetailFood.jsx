@@ -153,9 +153,11 @@ const DetailFood = () => {
               <span className="font-josefin text-[30px] font-bold text-[#663402]">
                 {product.sell_price.toLocaleString()}đ
               </span>
-              <span className="ml-4 font-josefin text-[20px] text-gray-500 line-through">
-                {product.price.toLocaleString()}đ
-              </span>
+              {product.price !== product.sell_price && (
+                <span className="price-old ml-2 text-sm font-bold text-[#999] line-through">
+                  {product.price.toLocaleString()} đ
+                </span>
+              )}
             </p>
             <div className="mb-2 h-[1px] w-full bg-gray-300"></div>
             <span className="font-josefin-sans text-lg font-semibold">
