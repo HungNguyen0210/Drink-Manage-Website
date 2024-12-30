@@ -11,6 +11,7 @@ import {
   faReceipt,
   faTicket,
   faComment,
+  faPaperPlane,
 } from "@fortawesome/free-solid-svg-icons";
 import ManageProduct from "./ProductManage/ManageProduct";
 import ManageBlog from "./BlogManage/ManageBlog";
@@ -224,7 +225,7 @@ const DashBoard = () => {
             isActive={activeComponent === "Review"}
           />
           <SidebarItem
-            icon={faComment}
+            icon={faPaperPlane}
             label="Gửi phiếu giảm giá"
             isSidebarExpanded={isSidebarExpanded}
             onClick={() => handleSetActiveComponent("Newsletter")}

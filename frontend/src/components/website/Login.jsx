@@ -83,15 +83,15 @@ const Login = () => {
       </button>
       {getToken() &&
         isDropdownOpen && ( // Chỉ hiển thị dropdown nếu có token
-          <div className="dropdown absolute -left-12 w-[160px] rounded-lg border-2 border-gray-300 bg-white shadow-md">
+          <div className="dropdown absolute -left-12 w-[180px] rounded-lg border-2 border-gray-300 bg-white shadow-md">
             <button
-              className="w-full border-b-2 border-gray-300 px-4 py-2 text-left text-sm hover:rounded-t-lg hover:bg-gray-200"
+              className="w-full border-b-2 border-gray-300 px-4 py-3 text-center font-josefin text-sm font-bold hover:rounded-t-lg hover:bg-black hover:text-white"
               onClick={handleLoginClick}
             >
               Thông tin tài khoản
             </button>
             <button
-              className="w-full px-4 py-2 text-left text-sm hover:rounded-b-lg hover:bg-gray-200"
+              className="w-full px-4 py-3 font-josefin font-bold text-center text-sm hover:rounded-b-lg hover:bg-black hover:text-white"
               onClick={handleLogoutClick}
             >
               Đăng xuất
