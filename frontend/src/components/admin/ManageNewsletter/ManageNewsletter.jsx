@@ -58,6 +58,7 @@ const ManageNewsletter = () => {
   const [newsletters, setNewsletters] = useState(placeholderData);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
+  const [allSelected, setAllSelected] = useState(false);
 
   // Lọc danh sách theo email
   const filteredNewsletters = newsletters.filter((newsletter) =>
@@ -91,6 +92,7 @@ const ManageNewsletter = () => {
       <div className="h-[600px] w-full max-w-3xl rounded-lg bg-white p-6 shadow-lg">
         {/* Tìm kiếm người gửi mail */}
         <div className="mb-4 flex items-center justify-between">
+          {/* Ô tìm kiếm */}
           <input
             type="text"
             placeholder="Tìm kiếm bằng email"
@@ -98,6 +100,37 @@ const ManageNewsletter = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-72 rounded-md border border-gray-300 p-2"
           />
+
+          {/* Nút "Chọn tất cả"/"Hủy" */}
+          <button
+            onClick={() => {
+              if (allSelected) {
+                // Hủy chọn tất cả
+                setNewsletters((prevNewsletters) =>
+                  prevNewsletters.map((newsletter) => ({
+                    ...newsletter,
+                    checkbox: false, // Hủy chọn
+                  })),
+                );
+              } else {
+                // Chọn tất cả
+                setNewsletters((prevNewsletters) =>
+                  prevNewsletters.map((newsletter) => ({
+                    ...newsletter,
+                    checkbox: true, // Chọn tất cả
+                  })),
+                );
+              }
+              setAllSelected(!allSelected); // Đổi trạng thái nút
+            }}
+            className={`rounded-md px-4 py-2 text-white ${
+              allSelected
+                ? "bg-red-600 hover:bg-red-500"
+                : "bg-blue-500 hover:bg-blue-600"
+            }`}
+          >
+            {allSelected ? "Hủy chọn" : "Chọn tất cả"}
+          </button>
         </div>
 
         {loading ? (
@@ -148,11 +181,7 @@ const ManageNewsletter = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-[400px] border border-gray-300 p-2"
           />
-          <button
-            className="ml-4 bg-black px-8 py-2 text-white "
-          >
-            Gửi
-          </button>
+          <button className="ml-4 bg-black px-8 py-2 text-white">Gửi</button>
         </div>
       </div>
     </div>
