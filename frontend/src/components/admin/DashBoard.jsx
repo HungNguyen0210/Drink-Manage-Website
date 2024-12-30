@@ -10,7 +10,7 @@ import {
   faClipboardList,
   faReceipt,
   faTicket,
-  faComment
+  faComment,
 } from "@fortawesome/free-solid-svg-icons";
 import ManageProduct from "./ProductManage/ManageProduct";
 import ManageBlog from "./BlogManage/ManageBlog";
@@ -27,13 +27,14 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { decodeJWT } from "../utils/jwtUtils";
 import ManageReview from "./ReviewManage/ManageReview";
+import ManageNewsletter from "./ManageNewsletter/ManageNewsletter";
 
 const SidebarItem = ({ icon, label, isSidebarExpanded, onClick, isActive }) => (
   <li
     className={`flex cursor-pointer items-center px-4 py-6 ${
       isActive
         ? "ml-2 mr-2 flex items-center justify-center rounded-2xl bg-black text-white"
-        : "hover:bg-gray-100 hover:rounded-xl hover:mx-2"
+        : "hover:mx-2 hover:rounded-xl hover:bg-gray-100"
     }`}
     onClick={onClick}
   >
@@ -129,16 +130,10 @@ const DashBoard = () => {
         return <ProfileAdmin />;
       case "Review":
         return <ManageReview />;
-      default:
-        return (
-          <div className="p-6">
-            <h2 className="text-2xl font-bold">Dashboard</h2>
-            <p>Select an option from the sidebar.</p>
-          </div>
-        );
+      case "Newsletter":
+        return <ManageNewsletter />;
     }
   };
-
 
   return (
     <div className="flex h-screen">
@@ -227,6 +222,13 @@ const DashBoard = () => {
             isSidebarExpanded={isSidebarExpanded}
             onClick={() => handleSetActiveComponent("Review")}
             isActive={activeComponent === "Review"}
+          />
+          <SidebarItem
+            icon={faComment}
+            label="Gửi phiếu giảm giá"
+            isSidebarExpanded={isSidebarExpanded}
+            onClick={() => handleSetActiveComponent("Newsletter")}
+            isActive={activeComponent === "Newsletter"}
           />
         </ul>
       </div>

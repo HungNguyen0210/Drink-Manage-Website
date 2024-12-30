@@ -61,13 +61,9 @@ const ManageCoupon = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 p-6">
-      <div className="w-full max-w-5xl rounded-lg bg-white p-6 shadow-lg">
-        <div className="mb-4 text-center text-2xl font-bold">
-          Quản lý Coupon
-        </div>
-
-        {/* Search box */}
+    <div className="flex items-center justify-center bg-gray-50 p-6">
+      <div className="h-[560px] w-full max-w-5xl rounded-lg bg-white p-6 shadow-lg">
+        {/* Tìm kiếm Coupon */}
         <div className="mb-4 flex items-center justify-between">
           <input
             type="text"
@@ -92,58 +88,71 @@ const ManageCoupon = () => {
         {loading ? (
           // Hiển thị phần loading nếu dữ liệu chưa được tải
           <div className="flex h-[255px] w-full items-center justify-center lg:h-[400px]">
-            <Loading /> {/* Hiển thị Loading khi đang tải dữ liệu */}
+            <Loading />
           </div>
         ) : (
           <div className="overflow-x-auto rounded-lg shadow-md">
+            {/* Tiêu đề cố định */}
             <table className="min-w-full table-auto">
-              <thead>
-                <tr className="bg-gray-100">
-                  <th className="px-4 py-3 text-center">Mã Coupon</th>
-                  <th className="px-4 py-3 text-center">Giá trị giảm</th>
-                  <th className="px-4 py-3 text-center">Tổng số lượng</th>
-                  <th className="px-4 py-3 text-center">Còn lại</th>
-                  <th className="px-4 py-3 text-center">Ngày tạo</th>
-                  <th className="px-4 py-3 text-center">Chỉnh sửa</th>
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="w-[220px] px-4 py-3 text-center">Mã Coupon</th>
+                  <th className="w-[200px] px-4 py-3 text-center">
+                    Giá trị giảm
+                  </th>
+                  <th className="w-[200px] px-4 py-3 text-center">
+                    Tổng số lượng
+                  </th>
+                  <th className="w-[200px] px-4 py-3 text-center">Còn lại</th>
+                  <th className="w-[230px] px-4 py-3 text-center">Ngày tạo</th>
+                  <th className="w-[200px] px-4 py-3 text-center">Chỉnh sửa</th>
                 </tr>
               </thead>
-              <tbody>
-                {filteredCoupons.map((coupon) => (
-                  <tr key={coupon._id} className="bg-white">
-                    <td className="px-4 py-6 text-center font-bold">
-                      {coupon.code}
-                    </td>
-                    <td className="px-4 py-6 text-center">
-                      {coupon.discountValue.toLocaleString()}
-                    </td>
-                    <td className="px-4 py-6 text-center">{coupon.maxUsage}</td>
-                    <td className="px-4 py-6 text-center">
-                      {coupon.maxUsage - coupon.currentUsage}
-                    </td>
-                    <td className="px-4 py-6 text-center">
-                      {new Date(coupon.createdAt).toLocaleDateString()}
-                    </td>
-                    <td className="px-4 py-6 text-center text-xl">
-                      <div className="group relative">
-                        <button
-                          onClick={() => handleShowCouponDetail(coupon)}
-                          className="px-3 py-1 text-blue-400 hover:rounded-full hover:bg-slate-300"
-                        >
-                          <FontAwesomeIcon icon={faPen} />
-                        </button>
-                        <span className="absolute bottom-full left-1/2 mb-3 -translate-x-1/2 transform whitespace-nowrap rounded-md bg-gray-800 px-2 py-2 text-base text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
-                          Xem chi tiết
-                        </span>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
             </table>
+
+            {/* Nội dung cuộn */}
+            <div className="max-h-[400px] overflow-y-auto">
+              <table className="min-w-full table-auto">
+                <tbody>
+                  {filteredCoupons.map((coupon) => (
+                    <tr key={coupon._id} className="bg-white">
+                      <td className="w-[200px] px-4 py-6 text-center font-bold">
+                        {coupon.code}
+                      </td>
+                      <td className="w-[200px] px-4 py-6 text-center">
+                        {coupon.discountValue.toLocaleString()} ₫
+                      </td>
+                      <td className="w-[200px] px-4 py-6 text-center">
+                        {coupon.maxUsage}
+                      </td>
+                      <td className="w-[200px] px-4 py-6 text-center">
+                        {coupon.maxUsage - coupon.currentUsage}
+                      </td>
+                      <td className="w-[200px] px-4 py-6 text-center">
+                        {new Date(coupon.createdAt).toLocaleDateString()}
+                      </td>
+                      <td className="w-[200px] px-4 py-6 text-center text-xl">
+                        <div className="group relative">
+                          <button
+                            onClick={() => handleShowCouponDetail(coupon)}
+                            className="px-3 py-1 text-blue-400 hover:rounded-full hover:bg-slate-300"
+                          >
+                            <FontAwesomeIcon icon={faPen} />
+                          </button>
+                          <span className="absolute left-[-40%] top-1/2 -translate-y-1/2 transform whitespace-nowrap rounded-md bg-gray-800 px-2 py-2 text-sm text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
+                            Xem chi tiết
+                          </span>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
 
-        {/* Show coupon Detail Modal */}
+        {/* Hiển thị modal chi tiết Coupon */}
         {showDetailModal && (
           <UpdateCoupon
             coupon={selectedCoupon}
@@ -152,7 +161,7 @@ const ManageCoupon = () => {
           />
         )}
 
-        {/* Show Add Coupon Modal */}
+        {/* Hiển thị modal tạo Coupon */}
         {showAddModal && (
           <AddCoupon
             onClose={handleCloseAddCoupon}

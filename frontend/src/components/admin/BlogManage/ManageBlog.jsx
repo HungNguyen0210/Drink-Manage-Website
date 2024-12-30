@@ -121,8 +121,8 @@ const ManageBlog = () => {
   };
 
   return (
-    <div className="flex items-center justify-center bg-gray-50 p-6">
-      <div className="h-[560px] w-full max-w-7xl rounded-lg bg-white p-6 shadow-lg">
+    <div className="flex items-center justify-center bg-gray-50">
+      <div className="h-[600px] w-full max-w-7xl rounded-lg bg-white p-6 shadow-lg">
         {/* Search and Add Blog */}
         <div className="mb-4 flex items-center justify-between">
           <input
@@ -153,34 +153,34 @@ const ManageBlog = () => {
         ) : (
           <div className="overflow-x-auto rounded-lg shadow-md">
             <table className="min-w-full table-auto">
-              <thead className="sticky top-0 z-10 bg-gray-100">
+              <thead className=" bg-gray-100">
                 <tr>
                   <th className="w-[130px] px-4 py-3 text-center">Ảnh</th>
                   <th className="w-[253px] px-4 py-3 text-center">Tiêu đề</th>
                   <th className="w-[253px] px-4 py-3 text-center">Nội dung</th>
-                  <th className="w-[123px] px-4 py-3 text-center">Ngày</th>
+                  <th className="w-[143px] px-4 py-3 text-center">Ngày</th>
                   <th className="px-4 py-3 text-center">Hot</th>
                   <th className="px-4 py-3 text-center">Banner</th>
                   <th className="px-4 py-3 text-center">Hành động</th>
                 </tr>
               </thead>
             </table>
-            <div className="max-h-[420px] overflow-y-auto">
+            <div className="max-h-[460px] overflow-y-auto">
               <table className="min-w-full table-auto">
                 <tbody>
                   {filteredBlogs.map((blog) => (
                     <tr key={blog._id} className="border-b">
-                      <td className="flex justify-center px-4 py-4 text-center">
+                      <td className="flex justify-center px-4 py-6 text-center">
                         <img
                           src={blog.image}
                           alt={blog.title}
                           className="h-20 w-auto object-cover"
                         />
                       </td>
-                      <td className="w-[253px] px-2 py-4 font-bold">
+                      <td className="w-[253px] px-2 py-6 font-bold">
                         {blog.title}
                       </td>
-                      <td className="w-[253px] px-4 py-4 text-left">
+                      <td className="w-[253px] px-4 py-6 text-left">
                         <div
                           dangerouslySetInnerHTML={{
                             __html: truncateHTMLContent(blog.content, 10),
@@ -188,7 +188,7 @@ const ManageBlog = () => {
                         ></div>
                       </td>
 
-                      <td className="w-[103px] px-4 py-4 text-center">
+                      <td className="w-[133px] px-4 py-6 text-center">
                         {formatDate(blog.createdAt)}
                       </td>
                       <td className="w-[103px] px-4 py-2 text-center">
@@ -207,7 +207,7 @@ const ManageBlog = () => {
                           </span>
                         </div>
                       </td>
-                      <td className="w-[103px] px-4 py-2 text-center">
+                      <td className="w-[133px] px-4 py-2 text-center">
                         <div className="group relative">
                           <FontAwesomeIcon
                             icon={faLightbulb}
@@ -223,7 +223,7 @@ const ManageBlog = () => {
                           </span>
                         </div>
                       </td>
-                      <td className="w-[150px] px-4 py-4 text-center">
+                      <td className="w-[150px] px-4 py-6 text-center">
                         <div className="flex justify-center space-x-4 text-xl">
                           <div className="group relative">
                             <button

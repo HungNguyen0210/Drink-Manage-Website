@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import axios from "axios";
@@ -68,7 +68,7 @@ const UpdateBlog = ({ blog, onClose, onBlogUpdated }) => {
   );
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+    <div className="fixed z-20 inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
       <div className="w-full max-w-7xl rounded-lg bg-white p-6 shadow-lg">
         <h2 className="mb-4 text-center text-4xl font-bold">Chỉnh sửa bài viết</h2>
         {error && <p className="mb-4 text-red-500">{error}</p>}

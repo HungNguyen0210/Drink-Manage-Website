@@ -246,7 +246,7 @@ const PaymentPage = () => {
                 className="h-16 w-full rounded-2xl border border-gray-300 p-2"
                 placeholder="Họ tên"
                 required
-                value={accountData?.username || ""}
+                defaultValue={accountData?.username || ""}
               />
             </div>
             <div className="input-payment">
@@ -263,14 +263,14 @@ const PaymentPage = () => {
                 name="number"
                 className="w-1/2 rounded-2xl border border-gray-300 p-2"
                 placeholder="Số điện thoại"
-                value={accountData?.numbers || ""}
+                defaultValue={accountData?.numbers || ""}
               />
               <input
                 type="email"
                 name="email"
                 className="w-1/2 rounded-2xl border border-gray-300 p-2"
                 placeholder="Email"
-                value={accountData?.gmail || ""}
+                defaultValue={accountData?.gmail || ""}
               />
             </div>
             <div>

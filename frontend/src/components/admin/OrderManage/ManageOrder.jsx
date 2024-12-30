@@ -69,13 +69,9 @@ const ManageOrder = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 p-6">
-      <div className="w-full max-w-7xl rounded-lg bg-white p-6 shadow-lg">
-        <div className="mb-4 text-center text-2xl font-bold">
-          Quản lý đơn hàng
-        </div>
-
-        {/* Search box */}
+    <div className="flex items-center justify-center bg-gray-50">
+      <div className="h-[600px] w-full max-w-7xl rounded-lg bg-white p-6 shadow-lg">
+        {/* Tìm kiếm */}
         <div className="mb-4 flex items-center justify-between">
           <input
             type="text"
@@ -87,58 +83,65 @@ const ManageOrder = () => {
         </div>
 
         {loading ? (
-          // Hiển thị phần loading nếu dữ liệu chưa được tải
+          // Hiển thị phần loading
           <div className="flex h-[255px] w-full items-center justify-center lg:h-[500px]">
-            <Loading /> {/* Hiển thị Loading khi đang tải dữ liệu */}
+            <Loading />
           </div>
         ) : (
           <div className="overflow-x-auto rounded-lg shadow-md">
+            {/* Tiêu đề cố định */}
             <table className="min-w-full table-auto">
-              <thead>
-                <tr className="bg-gray-100">
-                  <th className="px-4 py-3 text-center">Tên khách hàng</th>
-                  <th className="px-4 py-3 text-center">Email</th>
-                  <th className="px-4 py-3 text-center">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="w-[220px] px-4 py-3 text-center">Tên khách hàng</th>
+                  <th className="w-[350px] px-4 py-3 text-center">Email</th>
+                  <th className="w-[200px] px-4 py-3 text-center">
                     Phương thức thanh toán
                   </th>
-                  <th className="px-4 py-3 text-center">Ngày tạo đơn</th>
-                  <th className="px-4 py-3 text-center">Xem</th>
+                  <th className="w-[120px] px-4 py-3 text-center">Ngày tạo đơn</th>
+                  <th className="w-[100px] px-4 py-3 text-center">Xem</th>
                 </tr>
               </thead>
-              <tbody>
-                {filteredOrders.map((order) => (
-                  <tr key={order.id} className="border-b">
-                    <td className="px-4 py-6 text-center font-bold">
-                      {order.name}
-                    </td>
-                    <td className="px-4 py-6 text-center">{order.email}</td>
-                    <td className="px-4 py-6 text-center">
-                      {order.paymentMethod}
-                    </td>
-                    <td className="px-4 py-6 text-center">
-                      {new Date(order.createdAt).toLocaleDateString()}
-                    </td>
-                    <td className="px-4 py-6 text-center text-xl">
-                      <div className="group relative">
-                        <button
-                          onClick={() => handleShowOrderDetail(order)}
-                          className="rounded-full px-3 py-1 text-blue-400 hover:bg-slate-300"
-                        >
-                          <FontAwesomeIcon icon={faEye} />
-                        </button>
-                        <span className="absolute bottom-full left-1/2 mb-3 -translate-x-1/2 transform whitespace-nowrap rounded-md bg-gray-800 px-2 py-2 text-sm text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
-                          Xem chi tiết
-                        </span>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
             </table>
+
+            {/* Nội dung cuộn */}
+            <div className="max-h-[450px] overflow-y-auto">
+              <table className="min-w-full table-auto">
+                <tbody>
+                  {filteredOrders.map((order) => (
+                    <tr key={order.id} className="border-b">
+                      <td className="px-4 py-6 text-center font-bold">
+                        {order.name}
+                      </td>
+                      <td className="px-4 py-6 text-center">{order.email}</td>
+                      <td className="px-4 py-6 text-center">
+                        {order.paymentMethod}
+                      </td>
+                      <td className="px-4 py-6 text-center">
+                        {new Date(order.createdAt).toLocaleDateString()}
+                      </td>
+                      <td className="px-4 py-6 text-center text-xl">
+                        <div className="group relative">
+                          <button
+                            onClick={() => handleShowOrderDetail(order)}
+                            className="rounded-full px-3 py-1 text-blue-400 hover:bg-slate-300"
+                          >
+                            <FontAwesomeIcon icon={faEye} />
+                          </button>
+                          <span className="absolute left-[-110%] top-1/2 -translate-y-1/2 transform whitespace-nowrap rounded-md bg-gray-800 px-2 py-2 text-sm text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
+                            Xem chi tiết
+                          </span>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
 
-        {/* Show Order Detail Modal */}
+        {/* Hiển thị chi tiết đơn hàng */}
         {showDetailModal && (
           <DetailOrder
             order={selectedOrder}

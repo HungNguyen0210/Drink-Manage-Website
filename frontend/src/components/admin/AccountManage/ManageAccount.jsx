@@ -42,8 +42,7 @@ const ManageAccount = () => {
   const filteredAccounts = accounts.filter(
     (account) =>
       account.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      account.gmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      account.role.toLowerCase().includes(searchTerm.toLowerCase()),
+      account.gmail.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   const toggleIsActive = async (id) => {
@@ -96,12 +95,8 @@ const ManageAccount = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 p-6">
-      <div className="w-full max-w-7xl rounded-lg bg-white p-6 shadow-lg">
-        <div className="mb-4 text-center text-2xl font-bold">
-          Quản lý tài khoản
-        </div>
-
+    <div className="flex items-center justify-center bg-gray-50">
+      <div className="h-[600px] w-full max-w-7xl rounded-lg bg-white p-4 shadow-lg">
         <div className="mb-4 flex items-center justify-between">
           <input
             type="text"
@@ -129,67 +124,84 @@ const ManageAccount = () => {
           </div>
         ) : (
           <div className="overflow-x-auto rounded-lg shadow-md">
+            {/* Phần tiêu đề cố định */}
             <table className="min-w-full table-auto">
-              <thead>
-                <tr className="bg-gray-100">
-                  <th className="px-4 py-3 text-left">Tên người dùng</th>
-                  <th className="px-4 py-3 text-center">Số điện thoại</th>
-                  <th className="px-4 py-3 text-left">Gmail</th>
-                  <th className="px-4 py-3 text-center">Vai trò</th>
-                  <th className="px-4 py-3 text-center">Ngày tạo</th>
-                  <th className="px-4 py-3 text-center">Ngày cập nhật</th>
-                  <th className="px-4 py-3 text-center">Hoạt động</th>
-                  <th className="px-4 py-3 text-center">Chỉnh sửa</th>
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="w-[110px] px-4 py-3 text-center">
+                    Tên người dùng
+                  </th>
+                  <th className="w-[100px] px-4 py-3 text-center">
+                    Số điện thoại
+                  </th>
+                  <th className="w-[220px] px-4 py-3 text-center">Gmail</th>
+                  <th className="w-[100px] px-4 py-3 text-center">Vai trò</th>
+                  <th className="w-[100px] px-4 py-3 text-center">
+                    Ngày cập nhật
+                  </th>
+                  <th className="w-[100px] px-4 py-3 text-center">Hoạt động</th>
+                  <th className="w-[100px] px-4 py-3 text-center">Chỉnh sửa</th>
                 </tr>
               </thead>
-              <tbody>
-                {filteredAccounts.map((account) => (
-                  <tr key={account._id} className="border-b">
-                    <td className="px-4 py-6 font-bold">{account.username}</td>
-                    <td className="px-4 py-6 text-center">{account.numbers}</td>
-                    <td className="px-4 py-6">{account.gmail}</td>
-                    <td className="px-4 py-6 text-center">{account.role}</td>
-                    <td className="px-4 py-6 text-center">
-                      {new Date(account.createdAt).toLocaleDateString()}
-                    </td>
-                    <td className="px-4 py-6 text-center">
-                      {new Date(account.updatedAt).toLocaleDateString()}
-                    </td>
-                    <td className="px-4 py-6 text-center text-2xl">
-                      <div className="group relative">
-                        <FontAwesomeIcon
-                          icon={
-                            account.isActive === 1 ? faToggleOn : faToggleOff
-                          }
-                          className={
-                            account.isActive === 1
-                              ? "cursor-pointer text-green-500"
-                              : "cursor-pointer text-gray-400"
-                          }
-                          onClick={() => toggleIsActive(account._id)}
-                        />
-                        <span className="absolute bottom-full left-1/2 mb-2 -translate-x-1/2 transform whitespace-nowrap rounded-md bg-gray-800 px-2 py-2 text-sm text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
-                          Bật hoạt động
-                        </span>
-                      </div>
-                    </td>
-                    <td className="px-4 py-6 text-center text-xl">
-                      <div className="group relative">
-                        <button
-                          onClick={() => openUpdateForm(account)}
-                          className="rounded-md px-3 py-1 text-blue-400 hover:bg-slate-300"
-                        >
-                          <FontAwesomeIcon icon={faPen} />
-                        </button>
-                        <span className="absolute bottom-full left-1/2 mb-2 -translate-x-1/2 transform whitespace-nowrap rounded-md bg-gray-800 px-2 py-2 text-sm text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
-                          Chỉnh sửa
-                        </span>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
             </table>
+
+            {/* Phần nội dung cuộn */}
+            <div className="max-h-[470px] overflow-y-auto">
+              <table className="min-w-full table-auto">
+                <tbody>
+                  {filteredAccounts.map((account) => (
+                    <tr key={account._id} className="border-b">
+                      <td className="w-[160px] px-4 py-6 text-center font-bold">
+                        {account.username}
+                      </td>
+                      <td className="w-[170px] px-4 py-6 text-center">
+                        {account.numbers}
+                      </td>
+                      <td className="w-[160px] px-4 py-6 text-center">
+                        {account.gmail}
+                      </td>
+                      <td className="w-[160px] px-4 py-6 text-center">
+                        {account.role}
+                      </td>
+                      <td className="w-[160px] px-4 py-6 text-center">
+                        {new Date(account.updatedAt).toLocaleDateString()}
+                      </td>
+                      <td className="w-[160px] px-4 py-6 text-center text-2xl">
+                        <div className="group relative">
+                          <FontAwesomeIcon
+                            icon={
+                              account.isActive === 1 ? faToggleOn : faToggleOff
+                            }
+                            className={
+                              account.isActive === 1
+                                ? "cursor-pointer text-green-500"
+                                : "cursor-pointer text-gray-400"
+                            }
+                            onClick={() => toggleIsActive(account._id)}
+                          />
+                          <span className="absolute left-[-80%] top-1/2 -translate-y-1/2 transform whitespace-nowrap rounded-md bg-gray-800 px-2 py-2 text-sm text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
+                            Bật hoạt động
+                          </span>
+                        </div>
+                      </td>
+                      <td className="w-[160px] px-4 py-6 text-center text-xl">
+                        <div className="group relative">
+                          <button
+                            onClick={() => openUpdateForm(account)}
+                            className="rounded-full px-3 py-1 text-blue-400 hover:bg-slate-300"
+                          >
+                            <FontAwesomeIcon icon={faPen} />
+                          </button>
+                          <span className="absolute left-[-50%] top-1/2 -translate-y-1/2 transform whitespace-nowrap rounded-md bg-gray-800 px-2 py-2 text-sm text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
+                            Chỉnh sửa
+                          </span>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </div>
