@@ -6,6 +6,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import Loading from "../components/website/Loading";
 import Review from "../components/website/Review";
+import { createSlug } from "../components/utils/slug";
 
 const DetailFood = () => {
   const [quantity, setQuantity] = useState(1);
@@ -18,24 +19,34 @@ const DetailFood = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        setLoading(true);
+        setLoading(true); // Bật trạng thái loading trước khi gọi API
         const response = await axios.get(
           `http://localhost:5000/api/mainPages/${id}`,
         );
         if (response.data.success) {
-          setProduct(response.data.data);
+          const product = response.data.data;
+          setProduct(product); // Lưu sản phẩm vào state
+
+          // Tạo slug từ tên sản phẩm
+          const slug = createSlug(product.name);
+
+          // Điều hướng nếu URL hiện tại không chứa slug đúng
+          const currentPath = window.location.pathname;
+          if (!currentPath.includes(slug)) {
+            navigate(`/detailfood/${slug}`, { replace: true });
+          }
         } else {
           console.error("Sản phẩm không tồn tại hoặc API lỗi.");
         }
       } catch (error) {
         console.error("Lỗi khi gọi API:", error);
       } finally {
-        setLoading(false);
+        setLoading(false); // Tắt trạng thái loading sau khi xử lý xong
       }
     };
 
     fetchProduct();
-  }, [id]);
+  }, [id, navigate]);
 
   useEffect(() => {
     const fetchCategories = async () => {

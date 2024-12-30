@@ -187,7 +187,7 @@ const App = () => {
           path="/resetpassword"
           element={
             <MainLayout>
-              <ResetPassword/>
+              <ResetPassword />
             </MainLayout>
           }
         />

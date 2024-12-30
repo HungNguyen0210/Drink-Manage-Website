@@ -108,15 +108,6 @@ const DashBoard = () => {
   };
 
   const renderContent = () => {
-    if (userRole && userRole.includes("customer")) {
-      return (
-        <div className="p-6">
-          <h2 className="text-2xl font-bold">Access Denied</h2>
-          <p>You do not have permission to access this page.</p>
-        </div>
-      );
-    }
-
     switch (activeComponent) {
       case "Account":
         return userRole && userRole.includes("admin") ? (
@@ -131,7 +122,7 @@ const DashBoard = () => {
       case "Order":
         return <ManageOrder />;
       case "Chart":
-        return <ManageChart />;
+        return userRole && userRole.includes("admin") ? <ManageChart /> : null;
       case "Coupon":
         return <ManageCoupon />;
       case "ProfileAdmin":
@@ -147,6 +138,7 @@ const DashBoard = () => {
         );
     }
   };
+
 
   return (
     <div className="flex h-screen">
@@ -185,13 +177,15 @@ const DashBoard = () => {
               isActive={activeComponent === "Account"}
             />
           )}
-          <SidebarItem
-            icon={faChartColumn}
-            label="Thống kê"
-            isSidebarExpanded={isSidebarExpanded}
-            onClick={() => handleSetActiveComponent("Chart")}
-            isActive={activeComponent === "Chart"}
-          />
+          {Array.isArray(userRole) && userRole.includes("admin") && (
+            <SidebarItem
+              icon={faChartColumn}
+              label="Thống kê"
+              isSidebarExpanded={isSidebarExpanded}
+              onClick={() => handleSetActiveComponent("Chart")}
+              isActive={activeComponent === "Chart"}
+            />
+          )}
           <SidebarItem
             icon={faReceipt}
             label="Đơn Hàng"

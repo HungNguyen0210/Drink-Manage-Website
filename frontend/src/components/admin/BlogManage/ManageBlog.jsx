@@ -121,13 +121,8 @@ const ManageBlog = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 p-6">
-      <div className="w-full max-w-7xl rounded-lg bg-white p-6 shadow-lg">
-        {/* Header Section */}
-        <div className="mb-4 text-center text-2xl font-bold">
-          Quản lý bài viết
-        </div>
-
+    <div className="flex items-center justify-center bg-gray-50 p-6">
+      <div className="h-[560px] w-full max-w-7xl rounded-lg bg-white p-6 shadow-lg">
         {/* Search and Add Blog */}
         <div className="mb-4 flex items-center justify-between">
           <input
@@ -151,107 +146,113 @@ const ManageBlog = () => {
           </div>
         </div>
         {loading ? (
-        // Hiển thị phần loading nếu dữ liệu chưa được tải
-        <div className="flex h-[255px] w-full items-center justify-center lg:h-[200px]">
-          <Loading /> {/* Hiển thị Loading khi đang tải dữ liệu */}
-        </div>
-      ) : (
-        <div className="overflow-x-auto rounded-lg shadow-md">
-          <table className="min-w-full table-auto">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="px-4 py-3 text-center">Ảnh</th>
-                <th className="px-4 py-3 text-left">Tiêu đề</th>
-                <th className="px-4 py-3 text-left">Nội dung</th>
-                <th className="px-4 py-3 text-center">Ngày</th>
-                <th className="px-4 py-3 text-center">Hot</th>
-                <th className="px-4 py-3 text-center">Banner</th>
-                <th className="px-4 py-3 text-center">Hành động</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredBlogs.map((blog) => (
-                <tr key={blog._id} className="border-b">
-                  <td className="flex justify-center px-4 py-4 text-center">
-                    <img
-                      src={blog.image}
-                      alt={blog.title}
-                      className="h-20 w-auto object-cover"
-                    />
-                  </td>
-                  <td className="px-4 py-4 font-bold">{blog.title}</td>
-                  <td className="px-4 py-4 text-left">
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html: truncateHTMLContent(blog.content, 10),
-                      }}
-                    ></div>
-                  </td>
-
-                  <td className="px-4 py-4 text-center">
-                    {formatDate(blog.createdAt)}
-                  </td>
-                  <td className="px-4 py-2 text-center">
-                    <div className="group relative">
-                      <FontAwesomeIcon
-                        icon={faFire}
-                        className={
-                          blog.displayHot === 1
-                            ? "cursor-pointer text-2xl text-red-500"
-                            : "cursor-pointer text-xl text-gray-400"
-                        }
-                        onClick={() => toggleDisplayHot(blog._id)}
-                      />
-                      <span className="absolute bottom-full left-1/2 mb-4 -translate-x-1/2 transform whitespace-nowrap rounded-md bg-gray-800 px-2 py-2 text-sm text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
-                        Đặt làm Hot
-                      </span>
-                    </div>
-                  </td>
-                  <td className="px-4 py-2 text-center">
-                    <div className="group relative">
-                      <FontAwesomeIcon
-                        icon={faLightbulb}
-                        className={
-                          blog.displayBanner === 1
-                            ? "cursor-pointer text-3xl text-yellow-500"
-                            : "cursor-pointer text-2xl text-gray-400"
-                        }
-                        onClick={() => toggleDisplayBanner(blog._id)}
-                      />
-                      <span className="absolute bottom-full left-1/2 mb-4 -translate-x-1/2 transform whitespace-nowrap rounded-md bg-gray-800 px-2 py-2 text-sm text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
-                        Đặt làm Banner
-                      </span>
-                    </div>
-                  </td>
-                  <td className="px-4 py-4 text-center">
-                    <div className="flex justify-center space-x-4 text-xl">
-                      <div className="group relative">
-                        <button
-                          className="rounded-full px-3 py-1 text-blue-400 hover:bg-slate-300"
-                          onClick={() => handleEditClick(blog)}
-                        >
-                          <FontAwesomeIcon icon={faPen} />
-                        </button>
-                        <span className="absolute bottom-full left-1/2 mb-4 -translate-x-1/2 transform whitespace-nowrap rounded-md bg-gray-800 px-2 py-2 text-sm text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
-                          Chỉnh sửa
-                        </span>
-                      </div>
-                      <div className="group relative">
-                        <button className="rounded-md px-3 py-1 text-center text-red-400 hover:rounded-full hover:bg-slate-300">
-                          <FontAwesomeIcon icon={faTrash} />
-                        </button>
-                        <span className="absolute bottom-full left-1/3 mb-4 -translate-x-1/2 transform whitespace-nowrap rounded-md bg-gray-800 px-2 py-2 text-sm text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
-                          Xóa bài
-                        </span>
-                      </div>
-                    </div>
-                  </td>
+          // Hiển thị phần loading nếu dữ liệu chưa được tải
+          <div className="flex h-[255px] w-full items-center justify-center lg:h-[200px]">
+            <Loading /> {/* Hiển thị Loading khi đang tải dữ liệu */}
+          </div>
+        ) : (
+          <div className="overflow-x-auto rounded-lg shadow-md">
+            <table className="min-w-full table-auto">
+              <thead className="sticky top-0 z-10 bg-gray-100">
+                <tr>
+                  <th className="w-[130px] px-4 py-3 text-center">Ảnh</th>
+                  <th className="w-[253px] px-4 py-3 text-center">Tiêu đề</th>
+                  <th className="w-[253px] px-4 py-3 text-center">Nội dung</th>
+                  <th className="w-[123px] px-4 py-3 text-center">Ngày</th>
+                  <th className="px-4 py-3 text-center">Hot</th>
+                  <th className="px-4 py-3 text-center">Banner</th>
+                  <th className="px-4 py-3 text-center">Hành động</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+              </thead>
+            </table>
+            <div className="max-h-[420px] overflow-y-auto">
+              <table className="min-w-full table-auto">
+                <tbody>
+                  {filteredBlogs.map((blog) => (
+                    <tr key={blog._id} className="border-b">
+                      <td className="flex justify-center px-4 py-4 text-center">
+                        <img
+                          src={blog.image}
+                          alt={blog.title}
+                          className="h-20 w-auto object-cover"
+                        />
+                      </td>
+                      <td className="w-[253px] px-2 py-4 font-bold">
+                        {blog.title}
+                      </td>
+                      <td className="w-[253px] px-4 py-4 text-left">
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: truncateHTMLContent(blog.content, 10),
+                          }}
+                        ></div>
+                      </td>
+
+                      <td className="w-[103px] px-4 py-4 text-center">
+                        {formatDate(blog.createdAt)}
+                      </td>
+                      <td className="w-[103px] px-4 py-2 text-center">
+                        <div className="group relative">
+                          <FontAwesomeIcon
+                            icon={faFire}
+                            className={
+                              blog.displayHot === 1
+                                ? "cursor-pointer text-2xl text-red-500"
+                                : "cursor-pointer text-xl text-gray-400"
+                            }
+                            onClick={() => toggleDisplayHot(blog._id)}
+                          />
+                          <span className="absolute bottom-full left-1/2 mb-4 -translate-x-1/2 transform whitespace-nowrap rounded-md bg-gray-800 px-2 py-2 text-sm text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
+                            Đặt làm Hot
+                          </span>
+                        </div>
+                      </td>
+                      <td className="w-[103px] px-4 py-2 text-center">
+                        <div className="group relative">
+                          <FontAwesomeIcon
+                            icon={faLightbulb}
+                            className={
+                              blog.displayBanner === 1
+                                ? "cursor-pointer text-3xl text-yellow-500"
+                                : "cursor-pointer text-2xl text-gray-400"
+                            }
+                            onClick={() => toggleDisplayBanner(blog._id)}
+                          />
+                          <span className="absolute bottom-full left-1/2 mb-4 -translate-x-1/2 transform whitespace-nowrap rounded-md bg-gray-800 px-2 py-2 text-sm text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
+                            Đặt làm Banner
+                          </span>
+                        </div>
+                      </td>
+                      <td className="w-[150px] px-4 py-4 text-center">
+                        <div className="flex justify-center space-x-4 text-xl">
+                          <div className="group relative">
+                            <button
+                              className="rounded-full px-3 py-1 text-blue-400 hover:bg-slate-300"
+                              onClick={() => handleEditClick(blog)}
+                            >
+                              <FontAwesomeIcon icon={faPen} />
+                            </button>
+                            <span className="absolute bottom-full left-1/2 mb-4 -translate-x-1/2 transform whitespace-nowrap rounded-md bg-gray-800 px-2 py-2 text-sm text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
+                              Chỉnh sửa
+                            </span>
+                          </div>
+                          <div className="group relative">
+                            <button className="rounded-md px-3 py-1 text-center text-red-400 hover:rounded-full hover:bg-slate-300">
+                              <FontAwesomeIcon icon={faTrash} />
+                            </button>
+                            <span className="absolute bottom-full left-1/3 mb-4 -translate-x-1/2 transform whitespace-nowrap rounded-md bg-gray-800 px-2 py-2 text-sm text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
+                              Xóa bài
+                            </span>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
       </div>
 
       {isAddFormVisible && (
