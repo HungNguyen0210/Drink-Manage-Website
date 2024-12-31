@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faTimes, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 
 const SidebarCart = ({ handleCartClick }) => {
@@ -145,7 +145,7 @@ const SidebarCart = ({ handleCartClick }) => {
           cartItems.map((item) => (
             <div
               key={item.productId}
-              className="relative mb-4 flex h-[120px] w-[328px] items-start rounded-lg border border-[#ddd] p-2"
+              className="relative mb-4 flex ml-1 h-[120px] w-[328px] items-start rounded-lg border border-[#ddd] p-2"
             >
               <img
                 src={item.img}
@@ -178,16 +178,16 @@ const SidebarCart = ({ handleCartClick }) => {
                       +
                     </button>
                   </div>
-                  <div className="text-end font-josefin text-lg text-black">
+                  <div className="text-end font-josefin text-lg text-black mt-1">
                     {(item.quantity * item.price).toLocaleString()}₫
                   </div>
                 </div>
               </div>
               <button
-                className="absolute right-3 top-2 cursor-pointer border-none bg-transparent text-2xl text-[#a9a8a8] hover:text-black"
+                className="absolute right-3 top-2 cursor-pointer border-none bg-transparent text-xl text-red-300 hover:text-red-500"
                 onClick={() => removeItem(item.productId)}
               >
-                <FontAwesomeIcon icon={faTimes} />
+                <FontAwesomeIcon icon={faTrash} />
               </button>
             </div>
           ))
@@ -197,10 +197,9 @@ const SidebarCart = ({ handleCartClick }) => {
           </p>
         )}
       </div>
-      <div className="mt-2 w-full h-1 bg-[#ccc] " />
       <div className="mt-2 flex justify-between font-bold">
-        <span className="text-xl">Tổng cộng</span>
-        <span className="text-xl">{totalPrice.toLocaleString()}đ</span>
+        <span className="text-2xl font-josefin font-bold mt-2">Tổng cộng:</span>
+        <span className="text-2xl font-josefin font-bold mt-2 mr-2">{totalPrice.toLocaleString()}đ</span>
       </div>
       <Link to="/payment" state={{ cartItems, totalPrice }}>
         <button
