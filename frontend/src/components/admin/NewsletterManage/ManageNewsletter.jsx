@@ -118,7 +118,7 @@ const ManageNewsletter = () => {
                           type="checkbox"
                           checked={newsletter.checkbox}
                           onChange={() => handleCheckboxChange(newsletter._id)}
-                          className="h-6 w-6"
+                          className="h-4 w-4"
                         />
                       </td>
                       <td className="w-2/3 px-4 py-6 font-bold">
@@ -135,8 +135,6 @@ const ManageNewsletter = () => {
           <input
             type="text"
             placeholder="Nhập mã coupon mà bạn muốn gửi cho khách hàng"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
             className="w-[400px] border border-gray-300 p-2"
           />
           <button className="ml-4 bg-black px-8 py-2 text-white">Gửi</button>

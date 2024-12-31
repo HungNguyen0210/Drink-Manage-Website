@@ -66,13 +66,53 @@ const LoginPage = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
 
+    // Kiểm tra tên không chứa số
+    const nameRegex = /^[^\d]+$/;
+    if (!nameRegex.test(username)) {
+      setErrorMessage("Tên không được chứa số!");
+      return;
+    }
+
+    // Kiểm tra số điện thoại hợp lệ
+    const phoneRegex = /^0\d{8,9}$/;
+    if (!phoneRegex.test(numbers)) {
+      setErrorMessage(
+        "Số điện thoại phải bắt đầu bằng số 0 và có từ 9 đến 10 chữ số!",
+      );
+      return;
+    }
+
+    // Kiểm tra độ dài mật khẩu
+    if (password.length < 8) {
+      setErrorMessage("Mật khẩu phải có ít nhất 8 ký tự!");
+      return;
+    }
+
+    // Kiểm tra mật khẩu trùng khớp
     if (password !== confirmPassword) {
       setErrorMessage("Mật khẩu không khớp!");
       return;
     }
 
-    setLoading(true); // Set loading to true when request starts
+    setLoading(true); // Set loading state khi bắt đầu request
     try {
+      // Kiểm tra tên và email trùng lặp trong database
+      const checkResponse = await axios.post(
+        "http://localhost:5000/api/accounts/register-customer",
+        {
+          username,
+          gmail: email,
+        },
+      );
+
+      if (!checkResponse.data.success) {
+        setErrorMessage(
+          checkResponse.data.message || "Tên hoặc email đã tồn tại!",
+        );
+        return;
+      }
+
+      // Gửi yêu cầu đăng ký
       const response = await axios.post(
         "http://localhost:5000/api/accounts/register-customer",
         {
@@ -94,9 +134,10 @@ const LoginPage = () => {
         error.response?.data?.message || "Có lỗi xảy ra. Vui lòng thử lại.",
       );
     } finally {
-      setLoading(false); // Reset loading state after request completes
+      setLoading(false); // Reset loading state sau khi hoàn thành request
     }
   };
+
 
   return (
     <div className="mt-2 flex min-h-[85%] justify-center bg-white">

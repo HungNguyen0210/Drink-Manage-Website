@@ -206,7 +206,6 @@ const UpdateProduct = ({
             </div>
 
             {/* Phần Ảnh */}
-            {/* Hiển thị ảnh đã chọn hoặc ảnh cũ */}
             <div className="w-2/3">
               <label className="block pb-2 text-xl font-medium">Ảnh</label>
               <input

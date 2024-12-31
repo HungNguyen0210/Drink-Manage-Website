@@ -10,6 +10,7 @@ const AddProduct = ({ showModal, setShowModal }) => {
     displayType: 1,
     displayHot: 1,
   });
+  const [previewImage, setPreviewImage] = useState(null);
   const [categories, setCategories] = useState([]);
   const [error, setError] = useState("");
 
@@ -32,6 +33,14 @@ const AddProduct = ({ showModal, setShowModal }) => {
 
     fetchCategories();
   }, []);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setNewProduct({ ...newProduct, image: file });
+      setPreviewImage(URL.createObjectURL(file)); // Cập nhật ảnh xem trước
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -90,41 +99,44 @@ const AddProduct = ({ showModal, setShowModal }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="h-auto w-full max-w-xl rounded-lg bg-white p-6">
-        <h2 className="mb-4 flex justify-center text-4xl font-bold">
+      <div className="w-full max-w-7xl rounded-lg bg-white p-6">
+        <h2 className="mb-12 flex justify-center text-4xl font-bold">
           Tạo sản phẩm
         </h2>
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block pb-2 text-xl font-medium">
-              Tên sản phẩm
-            </label>
-            <input
-              type="text"
-              value={newProduct.name}
-              onChange={(e) =>
-                setNewProduct({ ...newProduct, name: e.target.value })
-              }
-              required
-              className="h-12 w-full rounded-md border border-gray-300 p-2"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block pb-2 text-xl font-medium">
-              Ảnh sản phẩm
-            </label>
-            <input
-              type="file"
-              onChange={(e) =>
-                setNewProduct({ ...newProduct, image: e.target.files[0] })
-              }
-              required
-              accept="image/*"
-              className="h-12 w-full rounded-md border border-gray-300 p-2"
-            />
-          </div>
-          <div className="mb-4 flex space-x-4">
-            <div className="w-1/2">
+          <div className="mb-4 flex space-x-6">
+            <div className="w-2/3">
+              <label className="block pb-2 text-xl font-medium">
+                Tên sản phẩm
+              </label>
+              <input
+                type="text"
+                value={newProduct.name}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, name: e.target.value })
+                }
+                required
+                className="h-12 w-full rounded-md border border-gray-300 p-2"
+              />
+              <label className="block pb-2 text-xl font-medium">Thực đơn</label>
+              <select
+                value={newProduct.category}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, category: e.target.value })
+                }
+                required
+                className="h-12 w-1/2 rounded-md border border-gray-300 p-2"
+              >
+                <option value="">Chọn thực đơn</option>
+                {categories.map((category) => (
+                  <option key={category._id} value={category._id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="w-2/3">
               <label className="block pb-2 text-xl font-medium">
                 Giá sản phẩm
               </label>
@@ -135,9 +147,9 @@ const AddProduct = ({ showModal, setShowModal }) => {
                 required
                 className="h-12 w-full rounded-md border border-gray-300 p-2"
               />
-            </div>
-            <div className="w-1/2">
-              <label className="block pb-2 text-xl font-medium">Giá Giảm</label>
+              <label className="mt-4 block pb-2 text-xl font-medium">
+                Giá Giảm
+              </label>
               <input
                 type="text"
                 value={newProduct.sell_price}
@@ -151,61 +163,69 @@ const AddProduct = ({ showModal, setShowModal }) => {
                 } p-2`}
               />
               {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
+
+              <div className="mt-4 flex space-x-4">
+                <div className="w-1/2">
+                  <label className="block pb-2 text-xl font-medium">
+                    Đặt làm Hot
+                  </label>
+                  <select
+                    value={newProduct.displayHot}
+                    onChange={(e) =>
+                      setNewProduct({
+                        ...newProduct,
+                        displayHot: +e.target.value,
+                      })
+                    }
+                    required
+                    className="w-2/3 rounded-md border border-gray-300 p-2"
+                  >
+                    <option value={1}>Hot</option>
+                    <option value={2}>Không Hot</option>
+                  </select>
+                </div>
+                <div className="w-1/2">
+                  <label className="block pb-2 text-xl font-medium">
+                    Hiển thị sản phẩm
+                  </label>
+                  <select
+                    value={newProduct.displayType}
+                    onChange={(e) =>
+                      setNewProduct({
+                        ...newProduct,
+                        displayType: +e.target.value,
+                      })
+                    }
+                    required
+                    className="w-2/3 rounded-md border border-gray-300 p-2"
+                  >
+                    <option value={1}>Bật</option>
+                    <option value={2}>Tắt</option>
+                  </select>
+                </div>
+              </div>
             </div>
-          </div>
-          <div className="mb-4">
-            <label className="block pb-2 text-xl font-medium">Thực đơn</label>
-            <select
-              value={newProduct.category}
-              onChange={(e) =>
-                setNewProduct({ ...newProduct, category: e.target.value })
-              }
-              required
-              className="h-12 w-1/2 rounded-md border border-gray-300 p-2"
-            >
-              <option value="">Chọn thực đơn</option>
-              {categories.map((category) => (
-                <option key={category._id} value={category._id}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="mb-4 flex space-x-4">
-            <div className="w-1/2">
+            <div className="w-2/3">
               <label className="block pb-2 text-xl font-medium">
-                Đặt làm Hot
+                Ảnh sản phẩm
               </label>
-              <select
-                value={newProduct.displayHot}
-                onChange={(e) =>
-                  setNewProduct({ ...newProduct, displayHot: +e.target.value })
-                }
+              <input
+                type="file"
+                onChange={handleImageChange}
                 required
-                className="h-12 w-1/2 rounded-md border border-gray-300 p-2"
-              >
-                <option value={1}>Hot</option>
-                <option value={2}>Không Hot</option>
-              </select>
-            </div>
-            <div className="w-1/2">
-              <label className="block pb-2 text-xl font-medium">
-                Hiển thị sản phẩm
-              </label>
-              <select
-                value={newProduct.displayType}
-                onChange={(e) =>
-                  setNewProduct({ ...newProduct, displayType: +e.target.value })
-                }
-                required
-                className="h-12 w-1/2 rounded-md border border-gray-300 p-2"
-              >
-                <option value={1}>Bật</option>
-                <option value={2}>Tắt</option>
-              </select>
+                accept="image/*"
+                className="w-full rounded-md border border-gray-300 p-2"
+              />
+              {previewImage && (
+                <img
+                  src={previewImage}
+                  alt="Preview"
+                  className="mt-4 h-48 w-auto max-w-full object-contain"
+                />
+              )}
             </div>
           </div>
-          <div className="flex justify-between pt-6">
+          <div className="flex justify-center pt-6">
             <button
               type="button"
               onClick={() => setShowModal(false)}
