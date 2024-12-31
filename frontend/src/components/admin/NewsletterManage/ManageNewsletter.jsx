@@ -1,87 +1,45 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Loading from "../../website/Loading";
+import axios from "axios";
 
 const ManageNewsletter = () => {
-  // Dữ liệu tĩnh mẫu
-  const placeholderData = [
-    {
-      id: 1,
-      email: "user1@example.com",
-      content: "Lorem ipsum 1",
-      checkbox: false,
-      status: true,
-    },
-    {
-      id: 2,
-      email: "user2@example.com",
-      content: "Lorem ipsum 2",
-      checkbox: false,
-      status: false,
-    },
-    {
-      id: 3,
-      email: "user3@example.com",
-      content: "Lorem ipsum 3",
-      checkbox: true,
-      status: true,
-    },
-    {
-      id: 4,
-      email: "user4@example.com",
-      content: "Lorem ipsum 4",
-      checkbox: false,
-      status: false,
-    },
-    {
-      id: 5,
-      email: "user4@example.com",
-      content: "Lorem ipsum 4",
-      checkbox: false,
-      status: false,
-    },
-    {
-      id: 6,
-      email: "user4@example.com",
-      content: "Lorem ipsum 4",
-      checkbox: false,
-      status: false,
-    },
-    {
-      id: 7,
-      email: "user4@example.com",
-      content: "Lorem ipsum 4",
-      checkbox: false,
-      status: false,
-    },
-  ];
-
-  const [newsletters, setNewsletters] = useState(placeholderData);
+  const [newsletters, setNewsletters] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
   const [allSelected, setAllSelected] = useState(false);
 
+  useEffect(() => {
+    const fetchNewsletters = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/api/newsletters",
+        );
+        if (response.data.success) {
+          setNewsletters(response.data.data);
+        } else {
+          console.error("Thất bại khi lấy thông tin");
+        }
+      } catch (error) {
+        console.error("Lỗi khi lấy thông tin: ", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNewsletters();
+  }, []);
   // Lọc danh sách theo email
   const filteredNewsletters = newsletters.filter((newsletter) =>
-    newsletter.email.toLowerCase().includes(searchTerm.toLowerCase()),
+    newsletter.gmail.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   // Thay đổi trạng thái checkbox
-  const handleCheckboxChange = (id) => {
+  const handleCheckboxChange = (_id) => {
     setNewsletters((prevNewsletters) =>
       prevNewsletters.map((newsletter) =>
-        newsletter.id === id
+        newsletter._id === _id
           ? { ...newsletter, checkbox: !newsletter.checkbox }
-          : newsletter,
-      ),
-    );
-  };
-
-  // Thay đổi trạng thái status
-  const toggleStatus = (id) => {
-    setNewsletters((prevNewsletters) =>
-      prevNewsletters.map((newsletter) =>
-        newsletter.id === id
-          ? { ...newsletter, status: !newsletter.status }
           : newsletter,
       ),
     );
@@ -154,17 +112,17 @@ const ManageNewsletter = () => {
               <table className="min-w-full table-auto">
                 <tbody>
                   {filteredNewsletters.map((newsletter) => (
-                    <tr key={newsletter.id} className="border-b">
+                    <tr key={newsletter._id} className="border-b">
                       <td className="w-1/3 px-4 py-6 text-center">
                         <input
                           type="checkbox"
                           checked={newsletter.checkbox}
-                          onChange={() => handleCheckboxChange(newsletter.id)}
+                          onChange={() => handleCheckboxChange(newsletter._id)}
                           className="h-6 w-6"
                         />
                       </td>
                       <td className="w-2/3 px-4 py-6 font-bold">
-                        {newsletter.email}
+                        {newsletter.gmail}
                       </td>
                     </tr>
                   ))}

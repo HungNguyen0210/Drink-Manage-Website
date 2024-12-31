@@ -39,6 +39,24 @@ export const createAccount = async (req, res) => {
   }
 
   try {
+    // Kiểm tra username và gmail đã tồn tại chưa
+    const existingGmail = await Account.findOne({ gmail });
+    if (existingGmail) {
+      return res.status(400).json({
+        success: false,
+        message: "Gmail đã tồn tại",
+      });
+    }
+
+    // Kiểm tra nếu `username` đã tồn tại
+    const existingUsername = await Account.findOne({ username });
+    if (existingUsername) {
+      return res.status(400).json({
+        success: false,
+        message: "Tên đăng nhập đã tồn tại",
+      });
+    }
+
     // Tạo tài khoản mới
     const newAccount = new Account({
       username,
@@ -56,15 +74,14 @@ export const createAccount = async (req, res) => {
         username: savedAccount.username,
         role: savedAccount.role,
       },
-      process.env.JWT_SECRET, // Bí mật được lưu trong biến môi trường
-      { expiresIn: "1h" } // Thời gian sống của token (1 giờ)
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
     );
 
-    // Trả về thông tin tài khoản và token
     res.status(201).json({
       success: true,
       data: savedAccount,
-      token, // Token được trả về
+      token,
     });
   } catch (error) {
     console.error("Error creating account:", error.message);
@@ -89,6 +106,22 @@ export const createCustomerAccount = async (req, res) => {
   }
 
   try {
+    const existingGmail = await Account.findOne({ gmail });
+    if (existingGmail) {
+      return res.status(400).json({
+        success: false,
+        message: "Gmail đã tồn tại",
+      });
+    }
+
+    // Kiểm tra nếu `username` đã tồn tại
+    const existingUsername = await Account.findOne({ username });
+    if (existingUsername) {
+      return res.status(400).json({
+        success: false,
+        message: "Tên đăng nhập đã tồn tại",
+      });
+    }
     // Tạo tài khoản mới với role mặc định là "customer"
     const newAccount = new Account({
       username,
@@ -122,7 +155,6 @@ export const createCustomerAccount = async (req, res) => {
   }
 };
 
-
 export const updateAccount = async (req, res) => {
   const { id } = req.params;
 
@@ -138,6 +170,23 @@ export const updateAccount = async (req, res) => {
     const updatedAccount = await Account.findByIdAndUpdate(id, account, {
       new: true,
     });
+
+    const existingGmail = await Account.findOne({ gmail });
+    if (existingGmail) {
+      return res.status(400).json({
+        success: false,
+        message: "Gmail đã tồn tại",
+      });
+    }
+
+    // Kiểm tra nếu `username` đã tồn tại
+    const existingUsername = await Account.findOne({ username });
+    if (existingUsername) {
+      return res.status(400).json({
+        success: false,
+        message: "Tên đăng nhập đã tồn tại",
+      });
+    }
 
     if (!updatedAccount) {
       return res
@@ -207,6 +256,14 @@ export const updateGmailAndNumbers = async (req, res) => {
     return res
       .status(400)
       .json({ success: false, message: "Invalid account ID" });
+  }
+
+  const existingGmail = await Account.findOne({ gmail });
+  if (existingGmail) {
+    return res.status(400).json({
+      success: false,
+      message: "Gmail đã tồn tại",
+    });
   }
 
   // Kiểm tra xem cả hai trường đều được cung cấp

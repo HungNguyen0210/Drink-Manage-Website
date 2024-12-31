@@ -12,11 +12,10 @@ const generateToken = (res, id, username, role) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production", // Chỉ dùng https trong production
     sameSite: "strict",
-    maxAge: 30 * 60 * 1000, // Cookie hết hạn sau 30 phút
+    maxAge: 24 * 60 * 60 * 1000,
   });
 
   return token;
 };
-
 
 export default generateToken;

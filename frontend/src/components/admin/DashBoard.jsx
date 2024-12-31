@@ -23,12 +23,12 @@ import Cookies from "js-cookie";
 import ManageOrder from "./OrderManage/ManageOrder";
 import ManageChart from "./ChartManage/ManageChart";
 import ManageCoupon from "./CouponManage/ManageCoupon";
-import ProfileAdmin from "./ManageProfile/ProfileAdmin";
+import ProfileAdmin from "./ProfileManage/ProfileAdmin";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { decodeJWT } from "../utils/jwtUtils";
 import ManageReview from "./ReviewManage/ManageReview";
-import ManageNewsletter from "./ManageNewsletter/ManageNewsletter";
+import ManageNewsletter from "./NewsletterManage/ManageNewsletter";
 
 const SidebarItem = ({ icon, label, isSidebarExpanded, onClick, isActive }) => (
   <li
