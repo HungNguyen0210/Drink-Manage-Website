@@ -4,7 +4,9 @@ import Newsletter from "../models/newsletter.model.js";
 // Lấy danh sách newsletter
 export const getNewsletters = async (req, res) => {
   try {
-    const newsletters = await Newsletter.find({});
+    const newsletters = await Newsletter.find({ status: false }).populate(
+      "coupon"
+    );
     res.status(200).json({ success: true, data: newsletters });
   } catch (error) {
     console.error("Error in fetching newsletters:", error.message);
@@ -14,7 +16,7 @@ export const getNewsletters = async (req, res) => {
 
 // Tạo mới một newsletter
 export const createNewsletter = async (req, res) => {
-  const { gmail, content, checkbox, status } = req.body;
+  const { gmail, coupon, checkbox, status } = req.body;
 
   if (!gmail) {
     return res
@@ -23,7 +25,7 @@ export const createNewsletter = async (req, res) => {
   }
 
   try {
-    const newNewsletter = new Newsletter({ gmail, content, checkbox, status });
+    const newNewsletter = new Newsletter({ gmail, coupon, checkbox, status });
     await newNewsletter.save();
 
     res.status(201).json({ success: true, data: newNewsletter });
@@ -41,7 +43,7 @@ export const createNewsletter = async (req, res) => {
 // Cập nhật một newsletter
 export const updateNewsletter = async (req, res) => {
   const { id } = req.params;
-  const { gmail, content, checkbox, status } = req.body;
+  const { gmail, coupon, checkbox, status } = req.body;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res
@@ -52,7 +54,7 @@ export const updateNewsletter = async (req, res) => {
   try {
     const updatedNewsletter = await Newsletter.findByIdAndUpdate(
       id,
-      { gmail, content, checkbox, status },
+      { gmail, coupon, checkbox, status },
       { new: true }
     );
 

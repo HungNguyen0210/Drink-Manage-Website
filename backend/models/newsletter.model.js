@@ -8,9 +8,9 @@ const newsletterSchema = new mongoose.Schema(
       trim: true,
       unique: true,
     },
-    content: {
-      type: String,
-      trim: true,
+    coupon: {
+      type: mongoose.Schema.Types.ObjectId, // Tham chiếu tới Coupon
+      ref: "Coupon", // Tên model Coupon
     },
     checkbox: {
       type: Boolean,

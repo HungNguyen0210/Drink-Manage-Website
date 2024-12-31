@@ -1,6 +1,6 @@
 import Coupon from "../models/coupon.model.js";
 import mongoose from "mongoose";
-
+import nodemailer from "nodemailer";
 // Tạo coupon mới
 export const createCoupon = async (req, res) => {
   try {
@@ -63,6 +63,35 @@ export const getCouponById = async (req, res) => {
   } catch (error) {
     console.error("Lỗi khi lấy coupon:", error);
     res.status(500).json({ message: "Lỗi server khi lấy coupon!" });
+  }
+};
+
+// Lấy các coupon có currentUsage < maxUsage
+export const getValidCoupons = async (req, res) => {
+  try {
+    // Lấy tất cả các coupon từ cơ sở dữ liệu
+    const coupons = await Coupon.find();
+
+    // Lọc các coupon hợp lệ (currentUsage < maxUsage)
+    const validCoupons = coupons.filter(
+      (coupon) => coupon.currentUsage < coupon.maxUsage
+    );
+
+    // Nếu không có coupon hợp lệ
+    if (validCoupons.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Không có coupon hợp lệ!" });
+    }
+
+    // Trả về danh sách coupon hợp lệ
+    res.status(200).json({ success: true, data: validCoupons });
+  } catch (error) {
+    console.error("Lỗi khi lấy các coupon hợp lệ:", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Lỗi server khi lấy các coupon hợp lệ!",
+    });
   }
 };
 
@@ -162,5 +191,52 @@ export const useCoupon = async (req, res) => {
   } catch (error) {
     console.error("Lỗi khi áp dụng coupon:", error);
     res.status(500).json({ message: "Lỗi server khi áp dụng coupon!" });
+  }
+};
+
+// Endpoint để gửi coupon qua email
+export const sendCoupons = async (req, res) => {
+  const { emails, couponCode } = req.body;
+
+  if (!emails || !emails.length || !couponCode) {
+    return res.status(400).json({
+      success: false,
+      message: "Danh sách email hoặc mã coupon không hợp lệ.",
+    });
+  }
+
+  try {
+    // Logic gửi email với mã coupon
+    const transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT || 587,
+      secure: process.env.SMTP_SECURE === "true",
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    });
+
+    const sendPromises = emails.map((email) =>
+      transporter.sendMail({
+        from: process.env.SMTP_USER,
+        to: email,
+        subject: "Nhận mã coupon giảm giá!",
+        text: `Bạn đã nhận được mã coupon: ${couponCode}`,
+      })
+    );
+
+    await Promise.all(sendPromises);
+
+    res.status(200).json({
+      success: true,
+      message: "Đã gửi coupon thành công.",
+    });
+  } catch (error) {
+    console.error("Lỗi khi gửi email:", error);
+    res.status(500).json({
+      success: false,
+      message: "Có lỗi xảy ra khi gửi email.",
+    });
   }
 };

@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import axios from "axios"; // Import axios
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faXmark } from "@fortawesome/free-solid-svg-icons";
-import imgfood1 from "../../../../../backend/assets/Screenshot_2024-11-18_231527-removebg-preview.png";
 
 // Modal Component
 const OrderDetailModal = ({ order, onClose }) => {
