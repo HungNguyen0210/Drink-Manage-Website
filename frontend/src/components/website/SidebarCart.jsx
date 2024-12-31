@@ -9,17 +9,18 @@ const SidebarCart = ({ handleCartClick }) => {
   const [totalPrice, setTotalPrice] = useState(0);
 
   useEffect(() => {
-    // Lấy giỏ hàng từ localStorage khi component được mount
     const tempCart = JSON.parse(localStorage.getItem("tempCart")) || [];
     setCartItems(tempCart);
+  }, []);
 
-    // Tính toán tổng giá trị giỏ hàng
-    const total = tempCart.reduce(
-      (total, item) => total + item.quantity * item.price,
+  // Cập nhật tổng giá trị giỏ hàng khi cartItems thay đổi
+  useEffect(() => {
+    const total = cartItems.reduce(
+      (total, item) => total + (item.quantity || 0) * item.price,
       0,
     );
     setTotalPrice(total);
-  }, []);
+  }, [cartItems]);
 
   const removeItem = (id) => {
     // Xóa sản phẩm khỏi giỏ hàng tạm thời
@@ -34,6 +35,70 @@ const SidebarCart = ({ handleCartClick }) => {
     );
     setTotalPrice(total);
   };
+
+  const decreaseQuantity = (productId) => {
+    setCartItems((prevCartItems) => {
+      const updatedCart = prevCartItems.map((item) =>
+        item.productId === productId && item.quantity > 1
+          ? { ...item, quantity: item.quantity - 1 }
+          : item,
+      );
+      // Lưu lại vào localStorage
+      localStorage.setItem("tempCart", JSON.stringify(updatedCart));
+      return updatedCart;
+    });
+  };
+
+  const increaseQuantity = (productId) => {
+    setCartItems((prevCartItems) => {
+      const updatedCart = prevCartItems.map((item) =>
+        item.productId === productId
+          ? { ...item, quantity: item.quantity + 1 }
+          : item,
+      );
+      // Lưu lại vào localStorage
+      localStorage.setItem("tempCart", JSON.stringify(updatedCart));
+      return updatedCart;
+    });
+  };
+
+  const handleQuantityChange = (e, productId) => {
+    const value = e.target.value;
+    const numericValue = parseInt(value, 10);
+
+    setCartItems((prevCartItems) => {
+      const updatedCart = prevCartItems.map((item) => {
+        if (item.productId === productId) {
+          if (!value) {
+            // Khi người dùng xóa hết, giữ trống tạm thời
+            return { ...item, quantity: "" };
+          } else if (!isNaN(numericValue) && numericValue >= 1) {
+            // Khi nhập số hợp lệ
+            return { ...item, quantity: numericValue };
+          }
+        }
+        return item;
+      });
+
+      // Lưu lại vào localStorage
+      localStorage.setItem("tempCart", JSON.stringify(updatedCart));
+      return updatedCart;
+    });
+  };
+
+  const handleBlur = (productId) => {
+    setCartItems((prevCartItems) => {
+      const updatedCart = prevCartItems.map((item) =>
+        item.productId === productId && item.quantity === ""
+          ? { ...item, quantity: 1 }
+          : item,
+      );
+      // Lưu lại vào localStorage
+      localStorage.setItem("tempCart", JSON.stringify(updatedCart));
+      return updatedCart;
+    });
+  };
+
 
   const handlePaymentClick = () => {
     // In ra thông tin giỏ hàng và tổng giá trị khi nhấn thanh toán
@@ -62,7 +127,7 @@ const SidebarCart = ({ handleCartClick }) => {
   };
 
   return (
-    <div className="fixed right-0 top-0 z-[1000] flex h-full w-[350px] flex-col overflow-y-auto bg-white p-5 shadow-lg transition-transform ease-in-out">
+    <div className="fixed right-0 top-0 z-[1000] flex h-full w-[370px] flex-col overflow-y-auto bg-white p-3 shadow-lg transition-transform ease-in-out">
       <button
         className="absolute right-5 top-2 cursor-pointer border-none bg-transparent text-3xl text-[#909090] hover:text-black"
         onClick={handleCartClick}
@@ -73,30 +138,53 @@ const SidebarCart = ({ handleCartClick }) => {
         Giỏ hàng
       </div>
 
-      <div className="mb-5 border-b-2 border-[#ccc]"></div>
+      <div className="mb-5 border-b-2 border-[#ccc]" />
 
       <div className="flex-grow overflow-y-auto">
         {cartItems.length > 0 ? (
           cartItems.map((item) => (
             <div
               key={item.productId}
-              className="relative mb-4 flex h-[110px] w-[290px] items-start rounded-lg border border-[#ddd] p-2"
+              className="relative mb-4 flex h-[120px] w-[328px] items-start rounded-lg border border-[#ddd] p-2"
             >
               <img
                 src={item.img}
                 alt={item.name}
-                className="mr-4 h-[85px] w-[50px] object-cover"
+                className="mt-2 mr-4 h-[85px] w-[50px] object-cover"
               />
               <div className="flex flex-grow flex-col">
-                <div className="mt-3 h-[50px] w-[170px] font-josefin text-xl font-bold text-[#00561e]">
+                <div className="mb-3 h-[50px] w-[170px] font-josefin text-xl font-bold text-[#00561e]">
                   {item.name}
                 </div>
-                <div className="w-[170px] font-josefin text-base text-black">
-                  {item.quantity} x {item.price.toLocaleString()} ₫
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <button
+                      onClick={() => decreaseQuantity(item.productId)}
+                      className="rounded-full bg-gray-200 px-3 py-1 hover:bg-gray-300"
+                    >
+                      -
+                    </button>
+                    <input
+                      type="text"
+                      value={item.quantity}
+                      onChange={(e) => handleQuantityChange(e, item.productId)}
+                      onBlur={() => handleBlur(item.productId)}
+                      className="w-12 h-8 mx-1 rounded border text-center"
+                    />
+                    <button
+                      onClick={() => increaseQuantity(item.productId)}
+                      className="rounded-full bg-gray-200 px-3 py-1 hover:bg-gray-300"
+                    >
+                      +
+                    </button>
+                  </div>
+                  <div className="text-end font-josefin text-lg text-black">
+                    {(item.quantity * item.price).toLocaleString()}₫
+                  </div>
                 </div>
               </div>
               <button
-                className="absolute right-3 top-[30px] cursor-pointer border-none bg-transparent text-2xl text-[#a9a8a8] hover:text-black"
+                className="absolute right-3 top-2 cursor-pointer border-none bg-transparent text-2xl text-[#a9a8a8] hover:text-black"
                 onClick={() => removeItem(item.productId)}
               >
                 <FontAwesomeIcon icon={faTimes} />
@@ -109,14 +197,14 @@ const SidebarCart = ({ handleCartClick }) => {
           </p>
         )}
       </div>
-
-      <div className="mt-5 flex justify-between font-bold">
+      <div className="mt-2 w-full h-1 bg-[#ccc] " />
+      <div className="mt-2 flex justify-between font-bold">
         <span className="text-xl">Tổng cộng</span>
         <span className="text-xl">{totalPrice.toLocaleString()}đ</span>
       </div>
       <Link to="/payment" state={{ cartItems, totalPrice }}>
         <button
-          className="mt-4 w-full cursor-pointer border-none bg-black p-2 text-white transition-transform duration-200 hover:scale-95"
+          className="mt-3 w-full cursor-pointer border-none bg-black p-2 text-white transition-transform duration-200 hover:scale-95"
           onClick={() => {
             handleCartClick();
             handlePaymentClick();

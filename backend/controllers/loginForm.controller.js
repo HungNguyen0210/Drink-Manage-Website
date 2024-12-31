@@ -60,15 +60,6 @@ export const forgotPassword = async (req, res) => {
     // Lưu mã OTP vào cơ sở dữ liệu
     user.otp = otp;
     await user.save();
-    console.log("Email:", email);
-    console.log("User OTP in DB:", user.otp);
-    console.log("Entered OTP:", otp);
-
-    console.log("SMTP_HOST:", process.env.SMTP_HOST);
-    console.log("SMTP_PORT:", process.env.SMTP_PORT);
-    console.log("SMTP_SECURE:", process.env.SMTP_SECURE);
-    console.log("SMTP_USER:", process.env.SMTP_USER);
-    console.log("SMTP_PASS:", process.env.SMTP_PASS);
 
     // Cấu hình transporter với SMTP
     const transporter = nodemailer.createTransport({

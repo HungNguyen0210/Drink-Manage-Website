@@ -39,6 +39,7 @@ const ResetPassword = () => {
 
       if (response.data.success) {
         toast.success("Mật khẩu đã được đặt lại thành công!");
+        localStorage.removeItem("email");
         navigate("/login"); // Chuyển về trang đăng nhập
       } else {
         toast.error(response.data.message || "Đặt lại mật khẩu thất bại!");

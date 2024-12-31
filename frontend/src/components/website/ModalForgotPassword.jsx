@@ -23,16 +23,16 @@ const ModalForgotPassword = () => {
 
       const data = await response.json();
       if (data.success) {
-        localStorage.setItem("email", email); // Lưu email vào localStorage
-        toast.success(data.message); // Hiển thị thông báo thành công
-        navigate("/authenticationcode"); // Chuyển hướng người dùng đến màn hình nhập mã xác thực
+        localStorage.setItem("email", email); 
+        toast.success(data.message); 
+        navigate("/authenticationcode"); 
       } else {
-        toast.error(data.message); // Hiển thị lỗi nếu có
+        toast.error(data.message); 
       }
     } catch (error) {
       toast.error("Có lỗi xảy ra. Vui lòng thử lại sau.");
     } finally {
-      setIsLoading(false); // Kết thúc loading
+      setIsLoading(false); 
     }
   };
 

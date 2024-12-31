@@ -225,11 +225,11 @@ const AddProduct = ({ showModal, setShowModal }) => {
               )}
             </div>
           </div>
-          <div className="flex justify-center pt-6">
+          <div className="mt-12 flex justify-center pt-6">
             <button
               type="button"
               onClick={() => setShowModal(false)}
-              className="h-12 w-32 rounded-md bg-gray-300 px-4 py-2 text-black hover:bg-gray-400"
+              className="mr-32 h-12 w-32 rounded-md bg-gray-300 px-4 py-2 text-black hover:bg-gray-400"
             >
               Hủy
             </button>

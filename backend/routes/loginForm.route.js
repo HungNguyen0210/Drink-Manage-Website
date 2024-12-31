@@ -6,6 +6,7 @@ import {
   resetPassword,
   forgotPassword,
   verifyOTP,
+  sendOTP,
 } from "../controllers/loginForm.controller.js";
 import { protect } from "../middleware/protect.js";
 

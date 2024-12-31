@@ -82,7 +82,7 @@ const ChangeInformation = ({ onClose, onUpdateSuccess }) => {
   if (loading) return <div>Đang tải...</div>;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed inset-0 z-20 flex items-center justify-center bg-black bg-opacity-50">
       <div className="w-full max-w-md rounded bg-white p-6 shadow-lg">
         <h2 className="flex justify-center font-josefin text-4xl font-bold">
           Cập nhật thông tin

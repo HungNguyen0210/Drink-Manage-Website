@@ -58,10 +58,15 @@ const PaymentPage = () => {
   }, [cartItems]);
 
   useEffect(() => {
-    const savedCart = localStorage.getItem("tempCart");
-    if (savedCart) {
-      setCartItems(JSON.parse(savedCart));
-    }
+    const intervalId = setInterval(() => {
+      const savedCart = localStorage.getItem("tempCart");
+      if (savedCart) {
+        setCartItems(JSON.parse(savedCart));
+      }
+    }, 2000); // Cập nhật mỗi 2 giây
+
+    // Clean up interval khi component unmount hoặc khi không cần cập nhật nữa
+    return () => clearInterval(intervalId);
   }, []);
 
   useEffect(() => {
@@ -230,7 +235,7 @@ const PaymentPage = () => {
   const finalPrice = Math.max(calculatedTotalPrice - discount, 0);
 
   return (
-    <div className="mx-auto mb-20 max-w-[1200px] px-4">
+    <div className="mx-auto mb-20 max-w-[1300px] px-4">
       <div className="grid grid-cols-1 gap-6 pt-12 sm:grid-cols-10">
         {/* Phần thông tin khách hàng chiếm 6 cột */}
         <div className="payment-left order-2 col-span-10 sm:order-1 sm:col-span-6">
@@ -281,7 +286,7 @@ const PaymentPage = () => {
                 type="text"
                 name="note"
                 className="h-16 w-full rounded-2xl border border-gray-300 p-2"
-                placeholder="Ghi chú (vd: giao lúc 10 giờ)"
+                placeholder="Ghi chú (ví dụ: giao lúc 10 giờ)"
               />
             </div>
 
@@ -398,10 +403,10 @@ const PaymentPage = () => {
         </div>
         {/* Phần thông tin giỏ hàng chiếm 4 cột */}
         <div className="order-1 col-span-10 sm:order-2 sm:col-span-4">
-          <h3 className="name-option-payment mb-2 pt-4 font-josefin text-[32px] text-xl font-bold">
+          <h3 className="name-option-payment mb-2 pt-4 font-josefin text-[32px] text-4xl font-bold">
             Thông tin sản phẩm
           </h3>
-          <div className="mb-4 max-h-[620px] overflow-y-auto rounded-lg bg-white p-4">
+          <div className="mb-4 max-h-[580px] overflow-y-auto rounded-lg bg-white p-4">
             {cartItems.map((item) => (
               <div
                 key={item.productId}
@@ -414,7 +419,7 @@ const PaymentPage = () => {
                     className="h-20% w-20% rounded-lg object-cover"
                   />
                 </div>
-                <div className="w-3/5 px-4">
+                <div className="sm:w-[250px] w-3/5  px-4">
                   <span className="block truncate font-josefin text-2xl font-bold text-[#00561e]">
                     {item.name}
                   </span>

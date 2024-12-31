@@ -96,23 +96,7 @@ const LoginPage = () => {
 
     setLoading(true); // Set loading state khi bắt đầu request
     try {
-      // Kiểm tra tên và email trùng lặp trong database
-      const checkResponse = await axios.post(
-        "http://localhost:5000/api/accounts/register-customer",
-        {
-          username,
-          gmail: email,
-        },
-      );
-
-      if (!checkResponse.data.success) {
-        setErrorMessage(
-          checkResponse.data.message || "Tên hoặc email đã tồn tại!",
-        );
-        return;
-      }
-
-      // Gửi yêu cầu đăng ký
+      // Gửi yêu cầu đăng ký trực tiếp
       const response = await axios.post(
         "http://localhost:5000/api/accounts/register-customer",
         {
@@ -125,6 +109,7 @@ const LoginPage = () => {
 
       if (response.data.success) {
         toast.success("Đăng ký thành công!");
+        setErrorMessage("");
         setRegisterMode(false);
       } else {
         setErrorMessage(response.data.message || "Đăng ký thất bại!");
@@ -137,7 +122,6 @@ const LoginPage = () => {
       setLoading(false); // Reset loading state sau khi hoàn thành request
     }
   };
-
 
   return (
     <div className="mt-2 flex min-h-[85%] justify-center bg-white">
