@@ -16,6 +16,7 @@ import path from "path";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import dotenv from "dotenv";
+import vnpayRoutes from './routes/vnpay.route.js';
 dotenv.config();
 
 const app = express();
@@ -42,6 +43,8 @@ app.use("/api/coupons", couponRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/newsletters", newsletterRoutes);
+// Sử dụng route cho VNPay
+app.use('/api/vnpay', vnpayRoutes);
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {

@@ -225,7 +225,12 @@ const PaymentPage = () => {
       );
       toast(response.data.message);
       localStorage.removeItem("tempCart"); //làm trống giỏ hàng
-      window.location.href = "/order-success"; // Redirect after successful order
+      // Redirect after successful order and reset
+      if (response.data.paymentUrl) {
+        window.location.href = response.data.paymentUrl; // Redirect after successful order
+      } else {
+        window.location.href = "/order-success"; // Redirect after successful order
+      }
     } catch (error) {
       console.error("Lỗi khi tạo đơn hàng:", error);
       toast.error("Đã có lỗi xảy ra, vui lòng thử lại.");
@@ -403,7 +408,7 @@ const PaymentPage = () => {
         </div>
         {/* Phần thông tin giỏ hàng chiếm 4 cột */}
         <div className="order-1 col-span-10 sm:order-2 sm:col-span-4">
-          <h3 className="name-option-payment mb-2 pt-4 font-josefin text-[32px] text-4xl font-bold">
+          <h3 className="name-option-payment mb-2 pt-4 font-josefin text-4xl text-[32px] font-bold">
             Thông tin sản phẩm
           </h3>
           <div className="mb-4 max-h-[580px] overflow-y-auto rounded-lg bg-white p-4">
@@ -419,7 +424,7 @@ const PaymentPage = () => {
                     className="h-20% w-20% rounded-lg object-cover"
                   />
                 </div>
-                <div className="sm:w-[250px] w-3/5  px-4">
+                <div className="w-3/5 px-4 sm:w-[250px]">
                   <span className="block truncate font-josefin text-2xl font-bold text-[#00561e]">
                     {item.name}
                   </span>

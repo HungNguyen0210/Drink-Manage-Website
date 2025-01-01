@@ -3,6 +3,9 @@ import Product from "../models/product.model.js";
 import Coupon from "../models/coupon.model.js";
 import { ObjectId } from "mongodb";
 import jwt from "jsonwebtoken";
+import {format} from "date-fns"
+import crypto from "crypto";
+
 
 export const getOrder = async (req, res) => {
   try {
@@ -133,6 +136,68 @@ export const createOrder = async (req, res) => {
     });
 
     await newOrder.save();
+    // Nếu thanh toán qua VNPay
+    if (paymentMethod === "Online Payment") {
+      const vnp_TmnCode = process.env.VNPAY_TMN_CODE; // Mã website VNPay
+      const vnp_HashSecret = process.env.VNPAY_HASH_SECRET; // Key bảo mật
+      const vnp_Url = process.env.VNPAY_URL; // URL cổng thanh toán VNPay
+      const vnp_ReturnUrl = `${process.env.BE_URL}api/vnpay/vnpay-return`; // URL trả về khi thanh toán xong
+
+      const ipAddr = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+
+      const createDate = format(new Date(), 'yyyyMMddHHmmss'); // Format: YYYYMMDDHHmmss
+      const expireDate = format(new Date(new Date().getTime() + 15 * 60 * 1000), 'yyyyMMddHHmmss'); // 15 phút sau
+      const orderId = newOrder._id.toString(); // ID đơn hàng làm mã giao dịch
+      const amount = finalPrice * 100; // Đơn vị: VND (x100)
+      const orderInfo = "string";
+      const bankCode = "ncb"; // Mã ngân hàng demo
+
+      const params = {
+        vnp_Amount: Math.round(amount),
+        vnp_Command: "pay",
+        vnp_CreateDate: createDate,
+        vnp_CurrCode: "VND",
+        vnp_ExpireDate: expireDate,
+        vnp_IpAddr: "127.0.0.1",
+        vnp_Locale: "vn",
+        vnp_OrderInfo: orderInfo,
+        vnp_OrderType: "other",
+        vnp_ReturnUrl: vnp_ReturnUrl,
+        vnp_TmnCode: vnp_TmnCode,
+        vnp_TxnRef: orderId,
+        vnp_Version: "2.1.0",
+      };
+
+
+      // Sắp xếp tham số theo thứ tự từ điển
+      const sortedParams = Object.keys(params)
+        .sort()
+        .map((key) => `${key}=${encodeURIComponent(String(params[key]))}`)
+        .join("&");
+
+
+      // Tính toán mã bảo mật (secure hash)
+      const secureHash = crypto
+        .createHmac('sha512', vnp_HashSecret)
+        .update(sortedParams)  // Dùng tham số đã sắp xếp, không cần stringify
+        .digest('hex');
+
+      console.log("Calculated Secure Hash:", secureHash);
+      console.log("Query String: ", params);
+      console.log("sortedParams: ", sortedParams);
+
+      // Tạo URL thanh toán
+      const paymentUrl = `${vnp_Url}?${sortedParams}&vnp_SecureHash=${secureHash}`;
+
+      console.log('VNPay Payment URL:', paymentUrl);
+
+
+      // Trả về URL thanh toán
+      return res.status(201).json({
+        message: "Đơn hàng đã được tạo. Chuyển hướng đến thanh toán VNPay.",
+        paymentUrl,
+      });
+    }
 
     res.status(201).json({
       message: "Đơn hàng đã được tạo thành công!",
