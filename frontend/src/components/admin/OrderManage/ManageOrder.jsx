@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import DetailOrder from "./DetailOrder";
 import Loading from "../../website/Loading";
@@ -80,6 +80,14 @@ const ManageOrder = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-60 rounded-md border border-gray-300 p-2"
           />
+          <div className="group relative">
+            <button className="mr-10 rounded-md bg-green-800 px-4 pb-2 pt-3 font-josefin text-3xl font-bold text-white transition-transform duration-200 hover:scale-90">
+              <FontAwesomeIcon icon={faFileExcel} />
+            </button>
+            <span className="absolute left-[-110%] top-1/2 -translate-y-1/2 transform whitespace-nowrap rounded-md bg-gray-800 px-2 py-2 text-sm text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
+              Xuất file Excel
+            </span>
+          </div>
         </div>
 
         {loading ? (
@@ -93,12 +101,16 @@ const ManageOrder = () => {
             <table className="min-w-full table-auto">
               <thead className="bg-gray-100">
                 <tr>
-                  <th className="w-[220px] px-4 py-3 text-center">Tên khách hàng</th>
+                  <th className="w-[220px] px-4 py-3 text-center">
+                    Tên khách hàng
+                  </th>
                   <th className="w-[350px] px-4 py-3 text-center">Email</th>
                   <th className="w-[200px] px-4 py-3 text-center">
                     Phương thức thanh toán
                   </th>
-                  <th className="w-[120px] px-4 py-3 text-center">Ngày tạo đơn</th>
+                  <th className="w-[120px] px-4 py-3 text-center">
+                    Ngày tạo đơn
+                  </th>
                   <th className="w-[100px] px-4 py-3 text-center">Xem</th>
                 </tr>
               </thead>

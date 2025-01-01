@@ -12,6 +12,7 @@ import {
   faTicket,
   faComment,
   faPaperPlane,
+  faBell
 } from "@fortawesome/free-solid-svg-icons";
 import ManageProduct from "./ProductManage/ManageProduct";
 import ManageBlog from "./BlogManage/ManageBlog";
@@ -241,66 +242,78 @@ const DashBoard = () => {
       >
         {/* Navbar */}
         <div className="flex justify-between bg-white p-4 shadow-md">
-          <div
-            className="ml-16 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-black"
-            onMouseEnter={toggleDropdown}
-            onMouseLeave={toggleDropdown}
-          >
-            <span className="text-white">
-              <FontAwesomeIcon icon={faUser} />
-            </span>
-          </div>
-
-          {/* Dropdown Menu */}
-          {isOpen && (
+          <div className="ml-auto flex items-center justify-start">
+            {/* User icon */}
             <div
-              className="absolute top-[56px] w-[180px] rounded-xl border-2 border-black bg-white text-black shadow-lg"
-              onMouseEnter={() => setIsOpen(true)}
-              onMouseLeave={() => setIsOpen(false)}
+              className="ml-16 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-black"
+              onMouseEnter={toggleDropdown}
+              onMouseLeave={toggleDropdown}
             >
-              <ul>
-                <li
-                  className="cursor-pointer rounded-t-lg border-b-2 border-black px-4 py-3 hover:bg-black hover:text-white"
-                  onClick={() => handleSetActiveComponent("ProfileAdmin")}
-                >
-                  Thông tin cá nhân
-                </li>
-                <li>
-                  <a
-                    className="block cursor-pointer rounded-b-lg px-4 py-3 text-center hover:bg-black hover:text-white"
-                    onClick={handleLogout}
-                  >
-                    Đăng xuất
-                  </a>
-                </li>
-              </ul>
-            </div>
-          )}
-
-          <div
-            className="relative pr-8"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-          >
-            <Link to="/">
-              {isHovered ? (
-                <img
-                  src={imgpersonportal}
-                  alt="Person Portal"
-                  className="h-8 w-8 cursor-pointer"
-                />
-              ) : (
-                <FontAwesomeIcon
-                  icon={faRightToBracket}
-                  className="cursor-pointer text-3xl"
-                />
-              )}
-            </Link>
-            {isHovered && (
-              <span className="absolute -left-4 mt-2 -translate-x-1/2 transform whitespace-nowrap rounded-md bg-gray-800 px-4 py-2 text-sm text-white shadow-lg">
-                Đến Trang Web
+              <span className="text-white">
+                <FontAwesomeIcon icon={faUser} />
               </span>
+            </div>
+
+            {/* Dropdown Menu */}
+            {isOpen && (
+              <div
+                className="absolute z-20 top-[56px] w-[180px] rounded-xl border-2 border-black bg-white text-black shadow-lg"
+                onMouseEnter={() => setIsOpen(true)}
+                onMouseLeave={() => setIsOpen(false)}
+              >
+                <ul>
+                  <li
+                    className="cursor-pointer rounded-t-lg border-b-2 border-black px-4 py-3 hover:bg-black hover:text-white"
+                    onClick={() => handleSetActiveComponent("ProfileAdmin")}
+                  >
+                    Thông tin cá nhân
+                  </li>
+                  <li>
+                    <a
+                      className="block cursor-pointer rounded-b-lg px-4 py-3 text-center hover:bg-black hover:text-white"
+                      onClick={handleLogout}
+                    >
+                      Đăng xuất
+                    </a>
+                  </li>
+                </ul>
+              </div>
             )}
+
+            {/* Bell Icon */}
+            <div className="mx-10">
+              <FontAwesomeIcon
+                icon={faBell}
+                className="cursor-pointer pt-1 text-3xl"
+              />
+            </div>
+
+            {/* Home Link */}
+            <div
+              className="relative pr-10"
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+            >
+              <Link to="/">
+                {isHovered ? (
+                  <img
+                    src={imgpersonportal}
+                    alt="Person Portal"
+                    className="h-8 w-8 cursor-pointer"
+                  />
+                ) : (
+                  <FontAwesomeIcon
+                    icon={faRightToBracket}
+                    className="cursor-pointer text-3xl"
+                  />
+                )}
+              </Link>
+              {isHovered && (
+                <span className="absolute -left-4 mt-2 -translate-x-1/2 transform whitespace-nowrap rounded-md bg-gray-800 px-4 py-2 text-sm text-white shadow-lg">
+                  Đến Trang Web
+                </span>
+              )}
+            </div>
           </div>
         </div>
 

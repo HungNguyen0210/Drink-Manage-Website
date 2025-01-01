@@ -3,6 +3,8 @@ import Loading from "../../website/Loading";
 import axios from "axios";
 import { toast } from "react-toastify";
 import LoadingWhite from "../../../components/website/LoadingWhite";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPaperPlane} from "@fortawesome/free-solid-svg-icons";
 
 const ManageNewsletter = () => {
   const [newsletters, setNewsletters] = useState([]);
@@ -225,9 +227,7 @@ const ManageNewsletter = () => {
           <button
             onClick={handleSelectAll}
             className={`rounded-md px-4 py-2 text-white transition-transform duration-200 hover:scale-95 ${
-              allSelected
-                ? "bg-red-600 "
-                : "bg-blue-500 "
+              allSelected ? "bg-red-600" : "bg-blue-500"
             }`}
           >
             {allSelected ? "Hủy chọn" : "Chọn tất cả"}
@@ -288,13 +288,17 @@ const ManageNewsletter = () => {
             onChange={handleCouponSelect}
           />
           <button
-            className={`ml-4 px-8 py-2 text-white transition-transform duration-200 hover:scale-95 ${
-              isSending ? "bg-black" : "bg-black"
+            className={`ml-4 px-8 py-1 text-white text-2xl transition-transform duration-200 hover:scale-95 ${
+              isSending ? "cursor-not-allowed bg-black" : "bg-black"
             }`}
             onClick={handleSendCoupon}
             disabled={isSending} // Vô hiệu hóa nút khi đang gửi
           >
-            {isSending ? <LoadingWhite /> : "Gửi"}
+            {isSending ? (
+              <LoadingWhite />
+            ) : (
+              <FontAwesomeIcon icon={faPaperPlane} />
+            )}
           </button>
 
           {/* Datalist chứa danh sách các coupon */}
