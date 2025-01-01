@@ -163,3 +163,49 @@ export const deleteProduct = async (req, res) => {
     res.status(500).json({ success: false, message: "Server Error" });
   }
 };
+
+export const getRelatedProducts = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Id không hợp lệ",
+      });
+    }
+
+    // Lấy sản phẩm hiện tại
+    const product = await Product.findById(id).populate("category", "name");
+
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Sản phẩm không tồn tại",
+      });
+    }
+
+    // Lấy các sản phẩm cùng danh mục, loại trừ sản phẩm hiện tại
+    const relatedProducts = await Product.find({
+      category: product.category._id,
+      _id: { $ne: product._id },
+    });
+
+    const productsWithFullImagePath = relatedProducts.map((relatedProduct) => ({
+      ...relatedProduct.toObject(),
+      image: `http://localhost:5000/assets/${relatedProduct.image}`,
+    }));
+
+    res.status(200).json({
+      success: true,
+      data: productsWithFullImagePath,
+    });
+  } catch (error) {
+    console.error("Error fetching related products:", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Lỗi server",
+    });
+  }
+};
+

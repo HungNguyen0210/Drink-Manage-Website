@@ -6,7 +6,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import Loading from "../components/website/Loading";
 import Review from "../components/website/Review";
-import { createSlug } from "../components/utils/slug";
+import RelatedProduct from "./RelatedProduct";
 
 const DetailFood = () => {
   const [quantity, setQuantity] = useState(1);
@@ -26,15 +26,6 @@ const DetailFood = () => {
         if (response.data.success) {
           const product = response.data.data;
           setProduct(product); // Lưu sản phẩm vào state
-
-          // Tạo slug từ tên sản phẩm
-          const slug = createSlug(product.name);
-
-          // Điều hướng nếu URL hiện tại không chứa slug đúng
-          const currentPath = window.location.pathname;
-          if (!currentPath.includes(slug)) {
-            navigate(`/detailfood/${slug}`, { replace: true });
-          }
         } else {
           console.error("Sản phẩm không tồn tại hoặc API lỗi.");
         }
@@ -165,7 +156,7 @@ const DetailFood = () => {
                 {product.sell_price.toLocaleString()}đ
               </span>
               {product.price !== product.sell_price && (
-                <span className="price-old ml-2 text-sm font-bold text-[#999] line-through">
+                <span className="price-old ml-2 text-2xl font-bold text-[#999] line-through">
                   {product.price.toLocaleString()} đ
                 </span>
               )}
@@ -230,6 +221,10 @@ const DetailFood = () => {
       {/* Review Section */}
       <div className="mt-8">
         <Review productId={product._id} />
+      </div>
+
+      <div>
+        <RelatedProduct productId={product._id} />
       </div>
     </div>
   );

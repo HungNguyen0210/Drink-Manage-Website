@@ -10,14 +10,13 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import Loading from "../components/website/Loading";
 
-const ProductSlider = () => {
+const RelatedProduct = ({ productId }) => {
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const swiperRef = useRef(null);
   const [showArrows, setShowArrows] = useState(false);
   const [loading, setLoading] = useState(true);
-
   const controls = useAnimation();
   const [ref, inView] = useInView({ threshold: 0.5 });
 
@@ -30,24 +29,26 @@ const ProductSlider = () => {
   }, [controls, inView]);
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchRelatedProducts = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("http://localhost:5000/api/mainPages");
+        const response = await axios.get(
+          `http://localhost:5000/api/products/relatedProducts/${productId}`,
+        );
         if (response.data.success) {
           setProducts(response.data.data);
         } else {
-          console.error("Failed to fetch products.");
+          console.error("Failed to fetch related products.");
         }
       } catch (error) {
-        console.error("Error fetching products:", error);
+        console.error("Error fetching related products:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchProducts();
-  }, []);
+    fetchRelatedProducts();
+  }, [productId]);
 
   const handleAddToCart = (product) => {
     setSelectedProduct(product);
@@ -60,13 +61,13 @@ const ProductSlider = () => {
 
   return (
     <div
-      className="product-slider relative mx-auto mb-20 max-w-screen-xl overflow-visible bg-white px-5 py-10"
+      className="product-slider relative mx-auto mb-16 max-w-screen-xl overflow-visible bg-white px-5"
       ref={ref}
       onMouseEnter={() => setShowArrows(true)}
       onMouseLeave={() => setShowArrows(false)}
     >
-      <div className="slider-title my-6 text-center text-4xl font-bold text-[#633c02]">
-        Sản phẩm bán chạy
+      <div className="slider-title my-6 text-center font-josefin text-4xl font-bold text-[#633c02]">
+        Sản phẩm tương tự
       </div>
       <div className="divider mx-auto mb-14 h-1 w-12 bg-[#633c02]"></div>
       {loading ? (
@@ -116,9 +117,6 @@ const ProductSlider = () => {
                       className="mx-auto h-[223px] transform transition-transform duration-300 ease-in-out group-hover:scale-110"
                     />
                   </Link>
-                </div>
-                <div className="product-bubble absolute right-4 top-2 rounded-full bg-[#ff4d4f] px-2 py-1 font-josefin text-sm text-white">
-                  HOT
                 </div>
                 <div className="product-info mb-10 mt-2">
                   <h6 className="product-name font-josefin text-xl font-bold text-[#00561e]">
@@ -201,4 +199,4 @@ const ProductSlider = () => {
   );
 };
 
-export default ProductSlider;
+export default RelatedProduct;

@@ -98,7 +98,6 @@ const Review = ({ productId }) => {
 
   const formatDate = (dateStr) => {
     try {
-      console.log("Date before: ", dateStr);
       const date = new Date(dateStr); // Chuyển chuỗi ISO thành Date object
       if (isNaN(date.getTime())) {
         throw new Error("Invalid date");
@@ -116,7 +115,7 @@ const Review = ({ productId }) => {
   };
 
   return (
-    <div className="mt-20 flex min-h-screen w-full flex-col p-4 md:p-0">
+    <div className="mt-16 flex mb-20 w-full flex-col p-4 md:p-0">
       <h2 className="mb-4 flex font-josefin text-4xl font-bold text-[#663402]">
         Đánh giá sản phẩm
       </h2>
