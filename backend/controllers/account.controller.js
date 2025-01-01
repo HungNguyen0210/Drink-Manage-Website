@@ -258,33 +258,38 @@ export const updateGmailAndNumbers = async (req, res) => {
       .json({ success: false, message: "Invalid account ID" });
   }
 
-  const existingGmail = await Account.findOne({ gmail });
-  if (existingGmail) {
+  // Kiểm tra xem có trường nào không được cung cấp
+  if (!gmail && !numbers) {
     return res.status(400).json({
       success: false,
-      message: "Gmail đã tồn tại",
-    });
-  }
-
-  // Kiểm tra xem cả hai trường đều được cung cấp
-  if (!gmail || !numbers) {
-    return res.status(400).json({
-      success: false,
-      message: "Both 'gmail' and 'numbers' are required",
+      message: "At least one of 'gmail' or 'numbers' is required",
     });
   }
 
   try {
-    // Kiểm tra xem gmail mới có trùng không
-    const existingAccount = await Account.findOne({ gmail });
-    if (existingAccount && existingAccount._id.toString() !== id) {
-      return res.status(400).json({
-        success: false,
-        message: "Gmail already in use by another account",
-      });
+    // Kiểm tra xem có gmail mới không và nó có trùng không
+    if (gmail) {
+      const existingGmail = await Account.findOne({ gmail });
+      if (existingGmail && existingGmail._id.toString() !== id) {
+        return res.status(400).json({
+          success: false,
+          message: "Gmail already in use by another account",
+        });
+      }
     }
 
-    // Cập nhật thông tin
+    // Kiểm tra xem có số điện thoại mới không và nó có trùng không
+    if (numbers) {
+      const existingNumbers = await Account.findOne({ numbers });
+      if (existingNumbers && existingNumbers._id.toString() !== id) {
+        return res.status(400).json({
+          success: false,
+          message: "Phone number already in use by another account",
+        });
+      }
+    }
+
+    // Cập nhật thông tin chỉ khi có dữ liệu hợp lệ
     const updatedAccount = await Account.findByIdAndUpdate(
       id,
       { gmail, numbers },

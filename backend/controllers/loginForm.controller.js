@@ -30,7 +30,70 @@ export const verifyOTP = async (req, res) => {
     // Nếu OTP đúng, có thể thực hiện các bước tiếp theo (ví dụ: cho phép đổi mật khẩu)
     res.status(200).json({
       success: true,
-      message: "Mã OTP hợp lệ. Bạn có thể thay đổi mật khẩu",
+      message: "Mã OTP hợp lệ.",
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Có lỗi xảy ra. Vui lòng thử lại sau.",
+    });
+  }
+};
+
+export const sendOTP = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    // Kiểm tra email có tồn tại trong cơ sở dữ liệu không
+    const user = await Account.findOne({ gmail: email });
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "Email không tồn tại trong hệ thống",
+      });
+    }
+
+    // Tạo mã OTP ngẫu nhiên
+    const otp = crypto.randomInt(100000, 999999); // Mã OTP 6 chữ số
+
+    // Lưu mã OTP vào cơ sở dữ liệu
+    user.otp = otp;
+    await user.save();
+
+    // Cấu hình transporter với SMTP
+    const transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST, // SMTP server
+      port: process.env.SMTP_PORT || 587, // Cổng SMTP (587 hoặc 465 nếu dùng SSL)
+      secure: process.env.SMTP_SECURE === "true", // true nếu dùng SSL
+      auth: {
+        user: process.env.SMTP_USER, // Tên đăng nhập SMTP
+        pass: process.env.SMTP_PASS, // Mật khẩu SMTP
+      },
+    });
+
+    // Cấu hình email
+    const mailOptions = {
+      from: process.env.SMTP_USER, // Địa chỉ email gửi
+      to: email, // Email người nhận
+      subject: "Mã OTP xác thực của bạn",
+      text: `Mã OTP của bạn là: ${otp}. Mã này có hiệu lực trong 10 phút.`,
+    };
+
+    // Gửi email
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("Email sending error:", error);
+        return res.status(500).json({
+          success: false,
+          message: "Gửi email thất bại. Vui lòng thử lại sau.",
+        });
+      }
+      console.log("Email sent:", info);
+      res.status(200).json({
+        success: true,
+        message: "Mã OTP đã được gửi đến email của bạn.",
+      });
     });
   } catch (error) {
     console.error("Error:", error);
@@ -273,65 +336,4 @@ export const logout = (req, res) => {
   }
 };
 
-export const sendOTP = async (req, res) => {
-  const { email } = req.body;
 
-  try {
-    // Kiểm tra email có tồn tại trong cơ sở dữ liệu không
-    const user = await Account.findOne({ gmail: email });
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "Email không tồn tại trong hệ thống",
-      });
-    }
-
-    // Tạo mã OTP ngẫu nhiên
-    const otp = crypto.randomInt(100000, 999999); // Mã OTP 6 chữ số
-
-    // Lưu mã OTP vào cơ sở dữ liệu
-    user.otp = otp;
-    await user.save();
-
-    // Cấu hình transporter với SMTP
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST, // SMTP server
-      port: process.env.SMTP_PORT || 587, // Cổng SMTP (587 hoặc 465 nếu dùng SSL)
-      secure: process.env.SMTP_SECURE === "true", // true nếu dùng SSL
-      auth: {
-        user: process.env.SMTP_USER, // Tên đăng nhập SMTP
-        pass: process.env.SMTP_PASS, // Mật khẩu SMTP
-      },
-    });
-
-    // Cấu hình email
-    const mailOptions = {
-      from: process.env.SMTP_USER, // Địa chỉ email gửi
-      to: email, // Email người nhận
-      subject: "Mã OTP xác thực của bạn",
-      text: `Mã OTP của bạn là: ${otp}. Mã này có hiệu lực trong 10 phút.`,
-    };
-
-    // Gửi email
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.error("Email sending error:", error);
-        return res.status(500).json({
-          success: false,
-          message: "Gửi email thất bại. Vui lòng thử lại sau.",
-        });
-      }
-      console.log("Email sent:", info);
-      res.status(200).json({
-        success: true,
-        message: "Mã OTP đã được gửi đến email của bạn.",
-      });
-    });
-  } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json({
-      success: false,
-      message: "Có lỗi xảy ra. Vui lòng thử lại sau.",
-    });
-  }
-};

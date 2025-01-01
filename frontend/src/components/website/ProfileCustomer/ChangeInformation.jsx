@@ -55,8 +55,19 @@ const ChangeInformation = ({ onClose, onUpdateSuccess }) => {
       return;
     }
 
-    if (!email || !phone) {
-      toast.error("Vui lòng nhập đủ thông tin email và số điện thoại.");
+    if (!email && !phone) {
+      toast.error(
+        "Vui lòng nhập ít nhất một trong hai thông tin email hoặc số điện thoại.",
+      );
+      return;
+    }
+
+    // Validate phone number (starts with 0 and is 9-10 digits long)
+    const phonePattern = /^0\d{8,9}$/;
+    if (phone && !phonePattern.test(phone)) {
+      toast.error(
+        "Số điện thoại phải bắt đầu bằng 0 và có độ dài từ 9 đến 10 chữ số.",
+      );
       return;
     }
 
@@ -75,7 +86,7 @@ const ChangeInformation = ({ onClose, onUpdateSuccess }) => {
         toast.error("Không thể cập nhật thông tin!");
       }
     } catch (error) {
-      toast.error("Lỗi khi cập nhật thông tin!1");
+      toast.error("Lỗi khi cập nhật thông tin!");
     }
   };
 
