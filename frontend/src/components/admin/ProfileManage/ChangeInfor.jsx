@@ -8,6 +8,7 @@ const ChangeInfor = ({ onClose, onUpdateSuccess }) => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -49,6 +50,7 @@ const ChangeInfor = ({ onClose, onUpdateSuccess }) => {
     const token = Cookies.get("jwtToken");
     const decoded = decodeJWT(token);
     const userId = decoded?.id;
+    setError("");
 
     if (!userId) {
       toast.error("Token không hợp lệ!");
@@ -56,7 +58,15 @@ const ChangeInfor = ({ onClose, onUpdateSuccess }) => {
     }
 
     if (!email || !phone) {
-      toast.error("Vui lòng nhập đủ thông tin email và số điện thoại.");
+      setError("Vui lòng nhập đủ thông tin email và số điện thoại.");
+      return;
+    }
+
+    const phoneRegex = /^0\d{8,9}$/; // Số điện thoại bắt đầu bằng 0 và có từ 9 đến 10 chữ số
+    if (!phoneRegex.test(phone)) {
+      setError(
+        "Vui lòng nhập số điện thoại bắt đầu bằng 0 và có từ 9 đến 10 số.",
+      );
       return;
     }
 
@@ -107,6 +117,9 @@ const ChangeInfor = ({ onClose, onUpdateSuccess }) => {
             className="h-11 w-full rounded border-2 p-2"
             required
           />
+          {error && (
+            <p className="mt-4 font-josefin text-lg text-red-500">{error}</p>
+          )}
           <div className="flex justify-between pt-4">
             <button
               type="button"

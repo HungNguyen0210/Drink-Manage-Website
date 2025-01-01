@@ -2,22 +2,34 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios"; // Import Axios
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons"; // Import icon
 
 const ResetPassword = () => {
   const [password, setPassword] = useState(""); // State lưu mật khẩu mới
   const [confirmPassword, setConfirmPassword] = useState(""); // State lưu xác nhận mật khẩu
+  const [showPassword, setShowPassword] = useState(false); // State để hiển thị mật khẩu
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // State để hiển thị mật khẩu xác nhận
   const navigate = useNavigate(); // Hook navigate
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Ngăn hành vi mặc định của form
+    setError("");
+
+    // Kiểm tra mật khẩu mới phải có ít nhất 8 ký tự
+    if (password.length < 8) {
+      setError("Mật khẩu mới phải có ít nhất 8 ký tự!");
+      return;
+    }
 
     if (!password.trim() || !confirmPassword.trim()) {
-      toast.error("Vui lòng nhập đầy đủ thông tin!");
+      setError("Vui lòng nhập đầy đủ thông tin!");
       return;
     }
 
     if (password !== confirmPassword) {
-      toast.error("Mật khẩu không khớp!");
+      setError("Mật khẩu không khớp!");
       return;
     }
 
@@ -61,7 +73,7 @@ const ResetPassword = () => {
         <form onSubmit={handleSubmit}>
           <div className="relative z-0 mb-8">
             <input
-              type="password"
+              type={showPassword ? "text" : "password"} // Hiển thị mật khẩu nếu showPassword là true
               id="new_password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -75,10 +87,15 @@ const ResetPassword = () => {
             >
               Mật khẩu mới
             </label>
+            <FontAwesomeIcon
+              icon={showPassword ? faEye : faEyeSlash}
+              className="absolute right-4 top-1/2 -translate-y-1/2 transform cursor-pointer"
+              onClick={() => setShowPassword(!showPassword)} // Chuyển trạng thái hiển thị mật khẩu
+            />
           </div>
           <div className="relative z-0 mb-6">
             <input
-              type="password"
+              type={showConfirmPassword ? "text" : "password"} // Hiển thị mật khẩu xác nhận nếu showConfirmPassword là true
               id="confirm_password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
@@ -92,7 +109,15 @@ const ResetPassword = () => {
             >
               Nhập lại mật khẩu
             </label>
+            <FontAwesomeIcon
+              icon={showConfirmPassword ? faEye : faEyeSlash}
+              className="absolute right-4 top-1/2 -translate-y-1/2 transform cursor-pointer"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)} // Chuyển trạng thái hiển thị mật khẩu xác nhận
+            />
           </div>
+          {error && (
+            <p className="mt-4 font-josefin text-lg text-red-500">{error}</p>
+          )}
           <button
             type="submit"
             className="mb-2 mt-3 w-full rounded-lg bg-black py-3 font-josefin text-xl text-white transition-transform duration-200 hover:scale-90"

@@ -8,6 +8,7 @@ const ChangeInformation = ({ onClose, onUpdateSuccess }) => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -49,6 +50,7 @@ const ChangeInformation = ({ onClose, onUpdateSuccess }) => {
     const token = Cookies.get("jwtToken");
     const decoded = decodeJWT(token);
     const userId = decoded?.id;
+    setError("");
 
     if (!userId) {
       toast.error("Token không hợp lệ!");
@@ -56,7 +58,7 @@ const ChangeInformation = ({ onClose, onUpdateSuccess }) => {
     }
 
     if (!email && !phone) {
-      toast.error(
+      setError(
         "Vui lòng nhập ít nhất một trong hai thông tin email hoặc số điện thoại.",
       );
       return;
@@ -65,7 +67,7 @@ const ChangeInformation = ({ onClose, onUpdateSuccess }) => {
     // Validate phone number (starts with 0 and is 9-10 digits long)
     const phonePattern = /^0\d{8,9}$/;
     if (phone && !phonePattern.test(phone)) {
-      toast.error(
+      setError(
         "Số điện thoại phải bắt đầu bằng 0 và có độ dài từ 9 đến 10 chữ số.",
       );
       return;
@@ -117,6 +119,9 @@ const ChangeInformation = ({ onClose, onUpdateSuccess }) => {
             onChange={(e) => setPhone(e.target.value)}
             className="h-11 w-full rounded border-2 p-2"
           />
+          {error && (
+            <p className="mt-4 font-josefin text-lg text-red-500">{error}</p>
+          )}
           <div className="flex justify-between pt-4">
             <button
               type="button"

@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 import Cookies from "js-cookie"; // Thư viện xử lý cookies
-import { decodeJWT } from "../../utils/jwtUtils"; // Hàm decodeJWT bạn đã tạo
+import { decodeJWT } from "../../utils/jwtUtils";
 import Loading from "../../website/Loading";
+import VerifyOtp from "../../../components/website/ProfileCustomer/VerifyOtp";
+import LoadingWhite from "../../../components/website/LoadingWhite";
 
 const ProfileAdmin = () => {
   const [profileData, setProfileData] = useState(null); // Trạng thái lưu thông tin tài khoản
@@ -14,6 +16,13 @@ const ProfileAdmin = () => {
   // Trạng thái hiển thị modal
   const [isPasswordModalOpen, setPasswordModalOpen] = useState(false);
   const [isInforModalOpen, setInforModalOpen] = useState(false);
+
+  // Trạng thái Loading cho từng nút
+  const [isSubmittingPassword, setIsSubmittingPassword] = useState(false);
+  const [isSubmittingInfo, setIsSubmittingInfo] = useState(false);
+
+  const [isOtpModalOpen, setOtpModalOpen] = useState(false);
+  const [otpTarget, setOtpTarget] = useState("");
 
   const fetchProfileData = async () => {
     try {
@@ -48,9 +57,58 @@ const ProfileAdmin = () => {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     fetchProfileData();
   }, []);
+
+  const handleOpenOtpModal = async (target) => {
+    const email = profileData?.gmail;
+    if (!email) {
+      toast.error("Không có email trong thông tin tài khoản!");
+      return;
+    }
+
+    // Set loading state based on the button clicked
+    if (target === "changePassword") {
+      setIsSubmittingPassword(true);
+    } else if (target === "updateInfo") {
+      setIsSubmittingInfo(true);
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/send-otp",
+        { email },
+      );
+
+      if (response.data.success) {
+        toast.success("Mã OTP đã được gửi. Vui lòng kiểm tra email!");
+        setOtpModalOpen(true);
+        setOtpTarget(target);
+      } else {
+        toast.error("Gửi OTP thất bại!");
+      }
+    } catch (error) {
+      toast.error("Lỗi khi gửi mã OTP!");
+    } finally {
+      // Reset loading state after OTP request
+      if (target === "changePassword") {
+        setIsSubmittingPassword(false);
+      } else if (target === "updateInfo") {
+        setIsSubmittingInfo(false);
+      }
+    }
+  };
+
+  const handleOtpSuccess = () => {
+    setOtpModalOpen(false);
+    if (otpTarget === "updateInfo") {
+      setInforModalOpen(true);
+    } else if (otpTarget === "changePassword") {
+      setPasswordModalOpen(true);
+    }
+  };
 
   if (loading) {
     return (
@@ -111,19 +169,29 @@ const ProfileAdmin = () => {
           <div className="flex w-1/2 flex-col items-center justify-center">
             <button
               className="w-3/4 rounded bg-black px-4 py-2 text-white transition-transform duration-200 hover:scale-95"
-              onClick={() => setPasswordModalOpen(true)}
+              onClick={() => handleOpenOtpModal("changePassword")}
+              disabled={isSubmittingPassword}
             >
-              Đổi mật khẩu
+              {isSubmittingPassword ? <LoadingWhite /> : "Đổi mật khẩu"}
             </button>
             <button
               className="mt-8 w-3/4 rounded bg-black px-4 py-2 text-white transition-transform duration-200 hover:scale-95"
-              onClick={() => setInforModalOpen(true)}
+              onClick={() => handleOpenOtpModal("updateInfo")}
+              disabled={isSubmittingInfo}
             >
-              Cập nhật thông tin
+              {isSubmittingInfo ? <LoadingWhite /> : "Cập nhật thông tin"}
             </button>
           </div>
         </div>
       </div>
+
+      {isOtpModalOpen && (
+        <VerifyOtp
+          email={profileData?.gmail}
+          onSuccess={handleOtpSuccess}
+          onClose={() => setOtpModalOpen(false)}
+        />
+      )}
 
       {/* Modal Đổi mật khẩu */}
       {isPasswordModalOpen && (

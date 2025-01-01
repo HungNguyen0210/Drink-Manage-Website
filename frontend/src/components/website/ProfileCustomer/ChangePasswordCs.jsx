@@ -19,6 +19,12 @@ const ChangePasswordCs = ({ onClose, onUpdateSuccess }) => {
     setError("");
     setSuccess("");
 
+    // Kiểm tra mật khẩu mới phải có ít nhất 8 ký tự
+    if (newPassword.length < 8) {
+      setError("Mật khẩu mới phải có ít nhất 8 ký tự!");
+      return;
+    }
+
     if (newPassword !== confirmPassword) {
       setError("Mật khẩu mới và mật khẩu xác nhận không khớp!");
       return;
@@ -70,7 +76,7 @@ const ChangePasswordCs = ({ onClose, onUpdateSuccess }) => {
               required
             />
             <FontAwesomeIcon
-              icon={showOldPassword ? faEyeSlash : faEye}
+              icon={showOldPassword ? faEye :faEyeSlash}
               className="absolute right-4 top-1/2 -translate-y-1/2 transform cursor-pointer"
               onClick={() => setShowOldPassword(!showOldPassword)}
             />
@@ -88,7 +94,7 @@ const ChangePasswordCs = ({ onClose, onUpdateSuccess }) => {
               required
             />
             <FontAwesomeIcon
-              icon={showNewPassword ? faEyeSlash : faEye}
+              icon={showNewPassword ? faEye :faEyeSlash}
               className="absolute right-4 top-1/2 -translate-y-1/2 transform cursor-pointer"
               onClick={() => setShowNewPassword(!showNewPassword)}
             />
@@ -106,7 +112,7 @@ const ChangePasswordCs = ({ onClose, onUpdateSuccess }) => {
               required
             />
             <FontAwesomeIcon
-              icon={showConfirmPassword ? faEyeSlash : faEye}
+              icon={showConfirmPassword ? faEye :faEyeSlash}
               className="absolute right-4 top-1/2 -translate-y-1/2 transform cursor-pointer"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
             />

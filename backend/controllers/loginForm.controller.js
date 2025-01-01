@@ -77,7 +77,7 @@ export const sendOTP = async (req, res) => {
       from: process.env.SMTP_USER, // Địa chỉ email gửi
       to: email, // Email người nhận
       subject: "Mã OTP xác thực của bạn",
-      text: `Mã OTP của bạn là: ${otp}. Mã này có hiệu lực trong 10 phút.`,
+      html: `Mã OTP của bạn là: <strong>${otp}</strong>. Mã này có hiệu lực trong 10 phút.`,
     };
 
     // Gửi email

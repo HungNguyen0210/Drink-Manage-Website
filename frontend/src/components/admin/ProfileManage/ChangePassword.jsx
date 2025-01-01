@@ -1,12 +1,19 @@
 import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 const ChangePassword = ({ onClose, onUpdateSuccess }) => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+
+  // States for toggling password visibility
+  const [showOldPassword, setShowOldPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,6 +22,11 @@ const ChangePassword = ({ onClose, onUpdateSuccess }) => {
     // Kiểm tra mật khẩu mới và mật khẩu xác nhận
     if (newPassword !== confirmPassword) {
       setError("Mật khẩu mới và mật khẩu xác nhận không khớp!");
+      return;
+    }
+
+    if (newPassword.length < 8) {
+      setError("Mật khẩu mới phải có ít nhất 8 ký tự!");
       return;
     }
 
@@ -53,7 +65,7 @@ const ChangePassword = ({ onClose, onUpdateSuccess }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="w-full max-w-md rounded bg-white p-6 shadow-lg">
+      <div className="w-full max-w-lg rounded bg-white p-6 shadow-lg">
         <h2 className="flex justify-center font-josefin text-4xl font-bold">
           Đổi mật khẩu
         </h2>
@@ -62,33 +74,57 @@ const ChangePassword = ({ onClose, onUpdateSuccess }) => {
           <label className="mb-2 mt-8 block font-josefin text-2xl font-bold">
             Mật khẩu cũ
           </label>
-          <input
-            type="password"
-            className="h-11 w-full rounded border-2 p-2"
-            value={oldPassword}
-            onChange={(e) => setOldPassword(e.target.value)}
-            required
-          />
+          <div className="relative">
+            <input
+              type={showOldPassword ? "text" : "password"}
+              className="h-11 w-full rounded border-2 p-2"
+              value={oldPassword}
+              onChange={(e) => setOldPassword(e.target.value)}
+              required
+            />
+            <FontAwesomeIcon
+              icon={showOldPassword ? faEye : faEyeSlash}
+              className="absolute right-3 top-3 cursor-pointer"
+              onClick={() => setShowOldPassword(!showOldPassword)}
+            />
+          </div>
+
           <label className="mb-2 mt-4 block font-josefin text-2xl font-bold">
             Mật khẩu mới
           </label>
-          <input
-            type="password"
-            className="h-11 w-full rounded border-2 p-2"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            required
-          />
+          <div className="relative">
+            <input
+              type={showNewPassword ? "text" : "password"}
+              className="h-11 w-full rounded border-2 p-2"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              required
+            />
+            <FontAwesomeIcon
+              icon={showNewPassword ? faEye : faEyeSlash}
+              className="absolute right-3 top-3 cursor-pointer"
+              onClick={() => setShowNewPassword(!showNewPassword)}
+            />
+          </div>
+
           <label className="mb-2 mt-4 block font-josefin text-2xl font-bold">
             Nhập lại mật khẩu
           </label>
-          <input
-            type="password"
-            className="h-11 w-full rounded border-2 p-2"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
+          <div className="relative">
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              className="h-11 w-full rounded border-2 p-2"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+            <FontAwesomeIcon
+              icon={showConfirmPassword ? faEye : faEyeSlash}
+              className="absolute right-3 top-3 cursor-pointer"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            />
+          </div>
+
           {error && (
             <p className="mt-4 font-josefin text-lg text-red-500">{error}</p>
           )}

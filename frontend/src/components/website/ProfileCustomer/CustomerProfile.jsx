@@ -154,14 +154,14 @@ const CustomerProfile = () => {
 
           <div className="flex w-1/2 flex-col items-center justify-center">
             <button
-              className="w-3/4 rounded bg-black px-4 pb-3 pt-3 text-white transition-transform duration-200 hover:scale-95"
+              className="w-3/4 rounded bg-black px-4 py-2 text-white transition-transform duration-200 hover:scale-95"
               onClick={() => handleOpenOtpModal("changePassword")}
               disabled={isSubmittingPassword}
             >
               {isSubmittingPassword ? <LoadingWhite /> : "Đổi mật khẩu"}
             </button>
             <button
-              className="mt-8 w-3/4 rounded bg-black px-4 pb-3 pt-3 text-white transition-transform duration-200 hover:scale-95"
+              className="mt-8 w-3/4 rounded bg-black px-4 py-2 text-white transition-transform duration-200 hover:scale-95"
               onClick={() => handleOpenOtpModal("updateInfo")}
               disabled={isSubmittingInfo}
             >
