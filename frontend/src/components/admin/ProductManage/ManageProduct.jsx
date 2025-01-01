@@ -173,18 +173,16 @@ const ManageProduct = () => {
                   <th className="w-[200px] px-4 py-3 text-center">Thực đơn</th>
                   <th className="w-[150px] px-4 py-3 text-center">Giá</th>
                   <th className="w-[150px] px-4 py-3 text-center">Giá giảm</th>
-                  <th className="w-[150px] px-4 py-3 text-center">
-                    Ngày cập nhật
-                  </th>
-                  <th className="w-[150px] px-4 py-3 text-center">Hot</th>
-                  <th className="w-[150px] px-4 py-3 text-center">Hoạt động</th>
-                  <th className="w-[100px] px-4 py-3 text-center">Chỉnh sửa</th>
+                  <th className="w-[150px] px-4 py-3 text-center">Ngày sửa</th>
+                  <th className="w-[140px] px-4 py-3 text-center">Hot</th>
+                  <th className="w-[140px] px-4 py-3 text-center">Hoạt động</th>
+                  <th className="w-[130px] px-4 py-3 text-center">Sửa</th>
                 </tr>
               </thead>
             </table>
 
             {/* Nội dung cuộn */}
-            <div className="max-h-[440px] overflow-y-auto">
+            <div className="max-h-[456px] overflow-y-auto">
               <table className="min-w-full table-auto">
                 <tbody>
                   {filteredProducts.map((product) => (
@@ -196,7 +194,7 @@ const ManageProduct = () => {
                           className="h-20 w-auto rounded-md object-cover"
                         />
                       </td>
-                      <td className="w-[222px] px-4 pt-12 pb-2 font-bold line-clamp-2 h-[90px]">
+                      <td className="line-clamp-2 h-[90px] w-[222px] px-4 pb-2 pt-12 font-bold">
                         {product.name}
                       </td>
                       <td className="w-[200px] px-4 py-6 text-center">

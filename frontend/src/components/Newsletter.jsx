@@ -1,4 +1,43 @@
+import axios from "axios";
+import { useState } from "react";
+import { toast } from "react-toastify";
+
 const Newsletter = () => {
+  const [email, setEmail] = useState(""); // Quản lý state của email
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Ngăn form reload lại trang
+    if (!email) {
+      alert("Vui lòng nhập email!");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/newsletters",
+        {
+          gmail: email,
+          checkbox: false,
+          status: false,
+        },
+      );
+
+      if (response.data.success) {
+        toast.success("Đăng ký thành công!");
+        setEmail(""); // Reset email input sau khi gửi thành công
+      } else {
+        toast.error(response.data.message || "Đăng ký thất bại!");
+      }
+    } catch (error) {
+      console.error("Lỗi khi gửi email:", error.message);
+      toast.error("Đã xảy ra lỗi. Vui lòng thử lại.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="bg-[#f2f2f2] p-5">
       <div className="mx-auto w-full max-w-screen-xl">
@@ -13,7 +52,7 @@ const Newsletter = () => {
           </div>
 
           <div className="ml-0 flex flex-1 items-center justify-end md:ml-80">
-            <form action="post" className="w-full">
+            <form onSubmit={handleSubmit} className="w-full">
               <div className="flex w-full flex-col items-center justify-center md:flex-row md:gap-0">
                 <input
                   id="newsletter_email"
@@ -21,13 +60,18 @@ const Newsletter = () => {
                   placeholder="Email của bạn"
                   required
                   className="texy-2xl h-[46px] w-full border border-gray-300 p-2 font-josefin font-bold md:w-[300px]"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
                 <button
                   id="newsletter_submit"
                   type="submit"
-                  className="mt-4 mb-4 h-[46px] w-[160px] cursor-pointer border-none bg-[#d88453] font-josefin font-bold text-white hover:bg-[#633c02] md:mt-0 md:mb-0 md:w-[160px]"
+                  disabled={loading}
+                  className={`mb-4 mt-4 h-[46px] w-[160px] cursor-pointer border-none bg-[#d88453] font-josefin font-bold text-white hover:bg-[#633c02] md:mb-0 md:mt-0 md:w-[160px] ${
+                    loading && "cursor-not-allowed opacity-50"
+                  }`}
                 >
-                  Đăng ký
+                  {loading ? "Đang gửi..." : "Đăng ký"}
                 </button>
               </div>
             </form>

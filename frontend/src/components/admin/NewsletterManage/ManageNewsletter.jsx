@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import Loading from "../../website/Loading";
 import axios from "axios";
+import { toast } from "react-toastify";
+import LoadingWhite from "../../../components/website/LoadingWhite";
 
 const ManageNewsletter = () => {
   const [newsletters, setNewsletters] = useState([]);
@@ -9,6 +11,7 @@ const ManageNewsletter = () => {
   const [allSelected, setAllSelected] = useState(false);
   const [validCoupons, setValidCoupons] = useState([]);
   const [selectedCoupon, setSelectedCoupon] = useState(null);
+  const [isSending, setIsSending] = useState(false);
 
   const updateNewsletterCheckbox = async (id, checkbox) => {
     try {
@@ -102,15 +105,16 @@ const ManageNewsletter = () => {
       .map((newsletter) => newsletter.gmail);
 
     if (!selectedEmails.length) {
-      alert("Vui lòng chọn ít nhất một email để gửi.");
+      toast.error("Vui lòng chọn ít nhất một email để gửi.");
       return;
     }
 
     if (!selectedCoupon) {
-      alert("Vui lòng chọn mã coupon để gửi.");
+      toast.error("Vui lòng chọn mã coupon để gửi.");
       return;
     }
 
+    setIsSending(true);
     try {
       // Gửi API với danh sách email và coupon đã chọn
       const response = await axios.post(
@@ -122,7 +126,7 @@ const ManageNewsletter = () => {
       );
 
       if (response.data.success) {
-        alert("Gửi coupon thành công!");
+        toast.success("Gửi coupon thành công!");
 
         // Xóa các email đã gửi thành công khỏi newsletter
         const deletePromises = newsletters
@@ -144,11 +148,13 @@ const ManageNewsletter = () => {
 
         console.log("Đã xóa các email đã gửi khỏi danh sách.");
       } else {
-        alert("Gửi coupon thất bại. Vui lòng thử lại.");
+        toast.error("Gửi coupon thất bại. Vui lòng thử lại.");
       }
     } catch (error) {
       console.error("Lỗi khi gửi coupon:", error);
-      alert("Có lỗi xảy ra khi gửi coupon.");
+      toast.error("Có lỗi xảy ra khi gửi coupon.");
+    } finally {
+      setIsSending(false); // Kết thúc trạng thái gửi
     }
   };
 
@@ -218,10 +224,10 @@ const ManageNewsletter = () => {
           {/* Nút "Chọn tất cả"/"Hủy" */}
           <button
             onClick={handleSelectAll}
-            className={`rounded-md px-4 py-2 text-white ${
+            className={`rounded-md px-4 py-2 text-white transition-transform duration-200 hover:scale-95 ${
               allSelected
-                ? "bg-red-600 hover:bg-red-500"
-                : "bg-blue-500 hover:bg-blue-600"
+                ? "bg-red-600 "
+                : "bg-blue-500 "
             }`}
           >
             {allSelected ? "Hủy chọn" : "Chọn tất cả"}
@@ -231,6 +237,10 @@ const ManageNewsletter = () => {
         {loading ? (
           <div className="flex h-[255px] w-full items-center justify-center lg:h-[300px]">
             <Loading />
+          </div>
+        ) : newsletters.length === 0 ? (
+          <div className="flex h-[255px] items-center justify-center text-gray-500">
+            Chưa có người gửi Gmail.
           </div>
         ) : (
           <div className="overflow-x-auto rounded-lg shadow-md">
@@ -271,17 +281,20 @@ const ManageNewsletter = () => {
         <div className="mb-4 flex items-center pt-6">
           <input
             type="text"
-            placeholder="Nhập mã coupon mà bạn muốn gửi cho khách hàng"
-            className="w-[400px] border border-gray-300 p-2"
+            placeholder="Chọn mã coupon mà bạn muốn gửi cho khách hàng"
+            className="w-[420px] border border-gray-300 p-2"
             list="coupon-list" // Liên kết với datalist
             value={selectedCoupon} // Giá trị input sẽ được liên kết với state
             onChange={handleCouponSelect}
           />
           <button
-            className="ml-4 bg-black px-8 py-2 text-white"
+            className={`ml-4 px-8 py-2 text-white transition-transform duration-200 hover:scale-95 ${
+              isSending ? "bg-black" : "bg-black"
+            }`}
             onClick={handleSendCoupon}
+            disabled={isSending} // Vô hiệu hóa nút khi đang gửi
           >
-            Gửi
+            {isSending ? <LoadingWhite /> : "Gửi"}
           </button>
 
           {/* Datalist chứa danh sách các coupon */}

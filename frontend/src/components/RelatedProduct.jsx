@@ -61,7 +61,7 @@ const RelatedProduct = ({ productId }) => {
 
   return (
     <div
-      className="product-slider relative mx-auto mb-16 max-w-screen-xl overflow-visible bg-white px-5"
+      className="product-slider relative mx-auto mb-20 max-w-screen-xl overflow-visible bg-white px-5"
       ref={ref}
       onMouseEnter={() => setShowArrows(true)}
       onMouseLeave={() => setShowArrows(false)}
