@@ -12,7 +12,6 @@ import {
   faTicket,
   faComment,
   faPaperPlane,
-  faBell
 } from "@fortawesome/free-solid-svg-icons";
 import ManageProduct from "./ProductManage/ManageProduct";
 import ManageBlog from "./BlogManage/ManageBlog";
@@ -30,6 +29,7 @@ import { toast } from "react-toastify";
 import { decodeJWT } from "../utils/jwtUtils";
 import ManageReview from "./ReviewManage/ManageReview";
 import ManageNewsletter from "./NewsletterManage/ManageNewsletter";
+import Notification from "./Notification";
 
 const SidebarItem = ({ icon, label, isSidebarExpanded, onClick, isActive }) => (
   <li
@@ -243,9 +243,14 @@ const DashBoard = () => {
         {/* Navbar */}
         <div className="flex justify-between bg-white p-4 shadow-md">
           <div className="ml-auto flex items-center justify-start">
+            {/* Bell Icon */}
+            <div className="relative mr-16">
+              <Notification />
+            </div>
+
             {/* User icon */}
             <div
-              className="ml-16 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-black"
+              className="mr-16 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-black"
               onMouseEnter={toggleDropdown}
               onMouseLeave={toggleDropdown}
             >
@@ -257,36 +262,27 @@ const DashBoard = () => {
             {/* Dropdown Menu */}
             {isOpen && (
               <div
-                className="absolute z-20 top-[56px] w-[180px] rounded-xl border-2 border-black bg-white text-black shadow-lg"
+                className="absolute top-[56px] z-20 w-[220px] rounded-xl border-2 border-black bg-white text-black shadow-lg"
                 onMouseEnter={() => setIsOpen(true)}
                 onMouseLeave={() => setIsOpen(false)}
               >
                 <ul>
                   <li
-                    className="cursor-pointer rounded-t-lg border-b-2 border-black px-4 py-3 hover:bg-black hover:text-white"
+                    className="cursor-pointer rounded-t-lg border-b-2 border-black px-4 py-4 text-center hover:bg-black hover:text-white"
                     onClick={() => handleSetActiveComponent("ProfileAdmin")}
                   >
                     Thông tin cá nhân
                   </li>
                   <li>
                     <a
-                      className="block cursor-pointer rounded-b-lg px-4 py-3 text-center hover:bg-black hover:text-white"
+                      className="block cursor-pointer rounded-b-lg px-4 py-4 text-center hover:bg-black hover:text-white"
                       onClick={handleLogout}
-                    >
-                      Đăng xuất
+                    > Đăng xuất
                     </a>
                   </li>
                 </ul>
               </div>
             )}
-
-            {/* Bell Icon */}
-            <div className="mx-10">
-              <FontAwesomeIcon
-                icon={faBell}
-                className="cursor-pointer pt-1 text-3xl"
-              />
-            </div>
 
             {/* Home Link */}
             <div
@@ -295,21 +291,14 @@ const DashBoard = () => {
               onMouseLeave={() => setIsHovered(false)}
             >
               <Link to="/">
-                {isHovered ? (
-                  <img
-                    src={imgpersonportal}
-                    alt="Person Portal"
-                    className="h-8 w-8 cursor-pointer"
-                  />
-                ) : (
-                  <FontAwesomeIcon
-                    icon={faRightToBracket}
-                    className="cursor-pointer text-3xl"
-                  />
-                )}
+                <img
+                  src={imgpersonportal}
+                  alt="Person Portal"
+                  className="h-8 w-8 cursor-pointer"
+                />
               </Link>
               {isHovered && (
-                <span className="absolute -left-4 mt-2 -translate-x-1/2 transform whitespace-nowrap rounded-md bg-gray-800 px-4 py-2 text-sm text-white shadow-lg">
+                <span className="absolute -left-4 mt-4 -translate-x-1/2 transform whitespace-nowrap rounded-md bg-gray-800 px-4 py-2 text-sm text-white shadow-lg">
                   Đến Trang Web
                 </span>
               )}
