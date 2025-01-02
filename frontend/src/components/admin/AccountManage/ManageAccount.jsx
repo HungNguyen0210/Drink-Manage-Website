@@ -46,20 +46,33 @@ const ManageAccount = () => {
   );
 
   const toggleIsActive = async (id) => {
-    try {
-      const updatedAccounts = accounts.map((account) =>
-        account._id === id
-          ? { ...account, isActive: account.isActive === 1 ? 2 : 1 }
-          : account,
-      );
-      setAccounts(updatedAccounts);
+    const updatedAccount = accounts.find((account) => account._id === id);
+    const newIsActive = updatedAccount.isActive === 1 ? 2 : 1;
 
-      // Gửi yêu cầu cập nhật API
-      await axios.put(`http://localhost:5000/api/accounts/${id}`, {
-        isActive: updatedAccounts.find((p) => p._id === id).isActive,
-      });
+    try {
+      // Gửi yêu cầu cập nhật trạng thái `isActive`
+      await axios.put(
+        `http://localhost:5000/api/accounts/${id}`,
+        { isActive: newIsActive },
+        {
+          headers: {
+            Authorization: `Bearer ${Cookies.get("jwtToken")}`,
+          },
+          withCredentials: true,
+        },
+      );
+
+      // Cập nhật trạng thái trong state
+      setAccounts((prevAccounts) =>
+        prevAccounts.map((account) =>
+          account._id === id ? { ...account, isActive: newIsActive } : account,
+        ),
+      );
     } catch (error) {
-      console.error("Error updating display type:", error);
+      console.error("Error updating isActive:", error);
+      toast.error(
+        error.response?.data?.message || "Có lỗi xảy ra khi cập nhật",
+      );
     }
   };
 
@@ -67,7 +80,7 @@ const ManageAccount = () => {
     axios
       .post("http://localhost:5000/api/accounts", newAccount, {
         headers: {
-          Authorization: `Bearer ${Cookies.get("token")}`, // Lấy token từ localStorage (nếu có)
+          Authorization: `Bearer ${Cookies.get("jwtToken")}`, // Lấy token từ localStorage (nếu có)
         },
         withCredentials: true,
       })
@@ -170,10 +183,10 @@ const ManageAccount = () => {
                         <div className="group relative">
                           <FontAwesomeIcon
                             icon={
-                              account.isActive === 1 ? faToggleOn : faToggleOff
+                              account.isActive === 2 ? faToggleOn : faToggleOff
                             }
                             className={
-                              account.isActive === 1
+                              account.isActive === 2
                                 ? "cursor-pointer text-green-500"
                                 : "cursor-pointer text-gray-400"
                             }

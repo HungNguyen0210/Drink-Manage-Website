@@ -9,7 +9,7 @@ const VerifyOtp = ({ email, onSuccess, onClose }) => {
     e.preventDefault();
     try {
       console.log("Email từ props:", email); // Kiểm tra email đã nhận đúng chưa
-
+      
       const response = await axios.post(
         "http://localhost:5000/api/auth/verify-otp",
         {

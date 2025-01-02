@@ -64,6 +64,7 @@ export const createAccount = async (req, res) => {
       gmail,
       numbers,
       role,
+      isActive: 2,
     });
     const savedAccount = await newAccount.save();
 
@@ -157,9 +158,9 @@ export const createCustomerAccount = async (req, res) => {
 
 export const updateAccount = async (req, res) => {
   const { id } = req.params;
-
   const account = req.body;
 
+  // Kiểm tra ID hợp lệ
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res
       .status(404)
@@ -167,26 +168,34 @@ export const updateAccount = async (req, res) => {
   }
 
   try {
+    // Nếu có yêu cầu cập nhật Gmail, kiểm tra Gmail có tồn tại hay không
+    if (account.gmail) {
+      const existingGmail = await Account.findOne({ gmail: account.gmail });
+      if (existingGmail && existingGmail._id.toString() !== id) {
+        return res.status(400).json({
+          success: false,
+          message: "Gmail đã tồn tại",
+        });
+      }
+    }
+
+    // Nếu có yêu cầu cập nhật Username, kiểm tra Username có tồn tại hay không
+    if (account.username) {
+      const existingUsername = await Account.findOne({
+        username: account.username,
+      });
+      if (existingUsername && existingUsername._id.toString() !== id) {
+        return res.status(400).json({
+          success: false,
+          message: "Tên đăng nhập đã tồn tại",
+        });
+      }
+    }
+
+    // Cập nhật tài khoản
     const updatedAccount = await Account.findByIdAndUpdate(id, account, {
       new: true,
     });
-
-    const existingGmail = await Account.findOne({ gmail });
-    if (existingGmail) {
-      return res.status(400).json({
-        success: false,
-        message: "Gmail đã tồn tại",
-      });
-    }
-
-    // Kiểm tra nếu `username` đã tồn tại
-    const existingUsername = await Account.findOne({ username });
-    if (existingUsername) {
-      return res.status(400).json({
-        success: false,
-        message: "Tên đăng nhập đã tồn tại",
-      });
-    }
 
     if (!updatedAccount) {
       return res
@@ -194,18 +203,10 @@ export const updateAccount = async (req, res) => {
         .json({ success: false, message: "Account not found" });
     }
 
-    // Nếu cần tạo token mới (ví dụ khi username hoặc role thay đổi)
-    if (account.username || account.role) {
-      generateToken(
-        res,
-        updatedAccount._id,
-        updatedAccount.username,
-        updatedAccount.role
-      );
-    }
-
+    // Trả về dữ liệu tài khoản đã cập nhật
     res.status(200).json({ success: true, data: updatedAccount });
   } catch (error) {
+    console.error("Error updating account:", error); // Log lỗi để debug
     res.status(500).json({ success: false, message: "Server Error" });
   }
 };

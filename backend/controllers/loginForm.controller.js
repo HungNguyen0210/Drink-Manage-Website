@@ -196,6 +196,12 @@ export const login = async (req, res) => {
       });
     }
 
+    if (user.isActive !== 2) {
+      return res
+        .status(403)
+        .json({ success: false, message: "Tài khoản chưa được kích hoạt!" });
+    }
+
     // Tạo JWT token
     const token = generateToken(res, user._id, user.username, user.role);
 
@@ -335,5 +341,3 @@ export const logout = (req, res) => {
     res.status(500).json({ success: false, message: "Đăng xuất thất bại" });
   }
 };
-
-

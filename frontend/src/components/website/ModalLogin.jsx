@@ -108,7 +108,7 @@ const LoginPage = () => {
       );
 
       if (response.data.success) {
-        toast.success("Đăng ký thành công!");
+        toast.success("Đăng ký thành công!"); 
         setErrorMessage("");
         setRegisterMode(false);
       } else {
