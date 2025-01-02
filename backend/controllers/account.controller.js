@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import Account from "../models/account.model.js";
 import jwt from "jsonwebtoken";
-import generateToken from "../generateToken.js";
 
 export const getAccounts = async (req, res) => {
   try {

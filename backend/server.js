@@ -10,6 +10,7 @@ import couponRoutes from "./routes/coupon.route.js";
 import orderRoutes from "./routes/order.route.js";
 import reviewRoutes from "./routes/review.route.js";
 import newsletterRoutes from "./routes/newsletter.route.js";
+import vnpayRoutes from "./routes/vnpay.route.js";
 import cors from "cors";
 import { fileURLToPath } from "url";
 import path from "path";
@@ -42,6 +43,7 @@ app.use("/api/coupons", couponRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/newsletters", newsletterRoutes);
+app.use("/api/vnpay", vnpayRoutes);
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
