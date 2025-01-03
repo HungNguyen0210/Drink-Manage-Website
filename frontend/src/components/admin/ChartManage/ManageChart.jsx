@@ -103,12 +103,30 @@ const ManageChart = () => {
       }
     });
 
+    // Gộp `labels` và `revenue` lại thành một mảng tạm thời
+    const combinedData = labels.map((label, index) => ({
+      date: label,
+      revenue: revenue[index],
+    }));
+
+    // Sắp xếp mảng theo thứ tự ngày
+    combinedData.sort((a, b) => {
+      const dateA = new Date(a.date.split("/").reverse().join("-")); // Định dạng lại ngày
+      const dateB = new Date(b.date.split("/").reverse().join("-"));
+      return dateA - dateB;
+    });
+
+    // Tách lại thành `labels` và `revenue` đã sắp xếp
+    const sortedLabels = combinedData.map((item) => item.date);
+    const sortedRevenue = combinedData.map((item) => item.revenue);
+
+    // Cập nhật dữ liệu biểu đồ
     setRevenueData({
-      labels,
+      labels: sortedLabels,
       datasets: [
         {
           label: "Doanh thu",
-          data: revenue,
+          data: sortedRevenue,
           backgroundColor: "rgba(75, 192, 192, 0.5)",
           borderColor: "rgba(75, 192, 192, 1)",
           borderWidth: 3,
@@ -246,7 +264,7 @@ const ManageChart = () => {
   return (
     <div className="bg-gray-50 p-6">
       {/* Biểu đồ Doanh thu */}
-      <div className="mb-4">
+      <div className="mb-4 mt-14">
         <h2 className="text-center font-josefin text-4xl font-bold">
           Doanh thu cửa hàng
         </h2>
@@ -280,7 +298,7 @@ const ManageChart = () => {
       {/* Biểu đồ Pie cho Top 5 sản phẩm bán chạy nhất */}
       <div className="mt-8 flex flex-col items-center justify-center">
         <div className="text-center">
-          <h2 className="mb-4 font-josefin text-4xl font-bold">
+          <h2 className="mb-2 font-josefin text-4xl font-bold mt-10">
             Top 5 Sản Phẩm Bán Chạy Nhất
           </h2>
         </div>
@@ -306,14 +324,14 @@ const ManageChart = () => {
         </div>
 
         {/* Pie Chart for Top 5 Products */}
-        <div className="mb-6 mt-4 h-5/6 w-full">
+        <div className="mb-6 mt-5 h-5/6 w-full">
           <Bar data={topProductsChartData} />
         </div>
       </div>
 
       <div className="mt-11 flex flex-col items-center justify-center">
         <div className="text-center">
-          <h2 className="mb-4 font-josefin text-4xl font-bold">
+          <h2 className="mb-8 font-josefin text-4xl font-bold">
             Top 5 Sản Phẩm Bán Ít Nhất
           </h2>
         </div>

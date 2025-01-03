@@ -4,6 +4,7 @@ import { faEye, faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import DetailOrder from "./DetailOrder";
 import Loading from "../../website/Loading";
+import ExcelJS from "exceljs";
 
 const ManageOrder = () => {
   const [orders, setOrders] = useState([]);
@@ -68,6 +69,49 @@ const ManageOrder = () => {
     fetchOrders();
   };
 
+  const exportToExcel = async () => {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Danh sách đơn hàng");
+
+    // Thêm tiêu đề
+    worksheet.columns = [
+      { header: "Tên", key: "name", width: 30 },
+      { header: "Email", key: "email", width: 40 },
+      { header: "Phương thức thanh toán", key: "paymentMethod", width: 25 },
+      { header: "Ngày tạo đơn", key: "createdAt", width: 15 },
+      { header: "Giảm giá", key: "discount", width: 15 },
+      { header: "Tổng tiền cuối", key: "finalPrice", width: 15 },
+    ];
+
+    // Thêm dữ liệu
+    orders.forEach((order) => {
+      worksheet.addRow({
+        name: order.name,
+        email: order.email,
+        paymentMethod: order.paymentMethod,
+        createdAt: new Date(order.createdAt).toLocaleDateString(),
+        discount: `${order.discount.toLocaleString("vi-VN")} ₫`,
+        finalPrice: `${order.finalPrice.toLocaleString("vi-VN")} ₫`,
+      });
+    });
+
+    // In đậm và căn giữa tiêu đề
+    worksheet.getRow(1).eachCell((cell) => {
+      cell.font = { bold: true }; // In đậm
+      cell.alignment = { horizontal: "center" }; // Canh giữa
+    });
+
+    // Xuất file
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], { type: "application/octet-stream" });
+
+    // Tải file
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "DanhSachDonHang.xlsx";
+    link.click();
+  };
+
   return (
     <div className="flex items-center justify-center bg-gray-50">
       <div className="h-[600px] w-full max-w-7xl rounded-lg bg-white p-6 shadow-lg">
@@ -81,7 +125,10 @@ const ManageOrder = () => {
             className="w-60 rounded-md border border-gray-300 p-2"
           />
           <div className="group relative">
-            <button className="mr-10 rounded-md bg-green-800 px-4 pb-2 pt-3 font-josefin text-3xl font-bold text-white transition-transform duration-200 hover:scale-90">
+            <button
+              onClick={exportToExcel}
+              className="mr-10 rounded-md bg-green-800 px-4 pb-2 pt-3 font-josefin text-3xl font-bold text-white transition-transform duration-200 hover:scale-90"
+            >
               <FontAwesomeIcon icon={faFileExcel} />
             </button>
             <span className="absolute left-[-110%] top-1/2 -translate-y-1/2 transform whitespace-nowrap rounded-md bg-gray-800 px-2 py-2 text-sm text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
