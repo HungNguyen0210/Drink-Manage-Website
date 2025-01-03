@@ -101,9 +101,6 @@ const SidebarCart = ({ handleCartClick }) => {
 
 
   const handlePaymentClick = () => {
-    // In ra thông tin giỏ hàng và tổng giá trị khi nhấn thanh toán
-    console.log("Thông tin giỏ hàng:", cartItems);
-    console.log("Tổng giá trị giỏ hàng:", totalPrice);
     toast.info(
       <div>
         <strong>Hãy đăng nhập</strong> để có thể xem lại lịch sử đơn hàng

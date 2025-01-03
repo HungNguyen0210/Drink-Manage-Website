@@ -40,10 +40,7 @@ export const vnpayReturn = async (req, res) => {
     // Kiểm tra trạng thái thanh toán
     const vnp_ResponseCode = vnp_Params["vnp_ResponseCode"];
     if (vnp_ResponseCode !== "00") {
-      return res.status(400).json({
-        message: "Giao dịch thất bại.",
-        code: vnp_ResponseCode,
-      });
+      return res.redirect("http://localhost:5173/order-fail");
     }
 
     // Lấy thông tin cần thiết từ vnp_Params
