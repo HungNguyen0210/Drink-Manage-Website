@@ -61,6 +61,7 @@ export const createOrder = async (req, res) => {
       finalPrice,
       cart,
       couponCode, // Thêm couponCode từ body
+      status,
     } = req.body;
 
     if (!name || !address || !number || !email || !paymentMethod || !cart) {
@@ -132,6 +133,7 @@ export const createOrder = async (req, res) => {
       finalPrice,
       cart: updatedCart,
       accountId,
+      status,
     });
 
     await newOrder.save();
@@ -183,14 +185,7 @@ export const createOrder = async (req, res) => {
         .update(sortedParams) // Dùng tham số đã sắp xếp, không cần stringify
         .digest("hex");
 
-      console.log("Calculated Secure Hash:", secureHash);
-      console.log("Query String: ", params);
-      console.log("sortedParams: ", sortedParams);
-
-      // Tạo URL thanh toán
       const paymentUrl = `${vnp_Url}?${sortedParams}&vnp_SecureHash=${secureHash}`;
-
-      console.log("VNPay Payment URL:", paymentUrl);
 
       // Trả về URL thanh toán
       return res.status(201).json({
@@ -212,7 +207,8 @@ export const createOrder = async (req, res) => {
 export const updateOrder = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, address, number, email, note, paymentMethod } = req.body;
+    const { name, address, number, email, note, paymentMethod, status } =
+      req.body;
 
     const order = await Order.findById(id);
     if (!order) {
@@ -225,6 +221,7 @@ export const updateOrder = async (req, res) => {
     if (email) order.email = email;
     if (note) order.note = note;
     if (paymentMethod) order.paymentMethod = paymentMethod;
+    if (status) order.status = status;
 
     const updatedOrder = await order.save();
     res.status(200).json({
