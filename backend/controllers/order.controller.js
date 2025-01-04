@@ -8,7 +8,7 @@ import crypto from "crypto";
 
 export const getOrder = async (req, res) => {
   try {
-    const orders = await Order.find()
+    const orders = await Order.find({ status: 1 })
       .populate({
         path: "cart.product",
         select: "name image",
@@ -192,6 +192,9 @@ export const createOrder = async (req, res) => {
         message: "Đơn hàng đã được tạo. Chuyển hướng đến thanh toán VNPay.",
         paymentUrl,
       });
+    } else {
+      newOrder.status = 1;
+      await newOrder.save();
     }
 
     res.status(201).json({
@@ -250,7 +253,7 @@ export const getOrderByToken = async (req, res) => {
     }
 
     // Tìm các đơn hàng của người dùng dựa trên accountId
-    const orders = await Order.find({ accountId: accountId })
+    const orders = await Order.find({ accountId: accountId, status: 1 })
       .populate({
         path: "cart.product",
         select: "name image",

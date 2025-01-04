@@ -50,7 +50,7 @@ export const vnpayReturn = async (req, res) => {
     // Cập nhật trạng thái đơn hàng (nếu cần)
     const order = await Order.findOneAndUpdate(
       { _id: orderId },
-      { status: "paid", paymentMethod: "Online Payment", paymentAmount },
+      { status: 1, paymentMethod: "Online Payment", paymentAmount },
       { new: true }
     );
 
