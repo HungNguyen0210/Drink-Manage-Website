@@ -20,6 +20,7 @@ const ManageAccount = () => {
   const [isUpdateFormVisible, setUpdateFormVisible] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [selectedStatus, setSelectedStatus] = useState(null);
 
   useEffect(() => {
     const fetchAccounts = async () => {
@@ -41,8 +42,9 @@ const ManageAccount = () => {
 
   const filteredAccounts = accounts.filter(
     (account) =>
-      account.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      account.gmail.toLowerCase().includes(searchTerm.toLowerCase()),
+      (selectedStatus === null || account.isActive === selectedStatus) &&
+      (account.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        account.gmail.toLowerCase().includes(searchTerm.toLowerCase())),
   );
 
   const toggleIsActive = async (id) => {
@@ -111,13 +113,32 @@ const ManageAccount = () => {
     <div className="flex items-center justify-center bg-gray-50">
       <div className="h-[600px] w-full max-w-7xl rounded-lg bg-white p-4 shadow-lg">
         <div className="mb-4 flex items-center justify-between">
-          <input
-            type="text"
-            placeholder="Tìm kiếm bằng tên, email và vai trò"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-72 rounded-md border border-gray-300 p-2"
-          />
+          <div className="flex items-center">
+            <input
+              type="text"
+              placeholder="Tìm kiếm bằng tên, email và vai trò"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-72 rounded-md border border-gray-300 p-2"
+            />
+            <span className="ml-8 pt-3 font-josefin text-2xl font-bold">
+              Lọc:
+            </span>
+            <select
+              className="ml-4 rounded-md border border-gray-300 p-2"
+              value={selectedStatus || ""}
+              onChange={(e) =>
+                setSelectedStatus(
+                  e.target.value === "" ? null : Number(e.target.value),
+                )
+              }
+            >
+              <option value="">Tất cả</option>
+              <option value="2">Đang hoạt động</option>
+              <option value="1">Tắt hoạt động</option>
+            </select>
+          </div>
+
           <div className="group relative">
             <button
               onClick={() => setAddFormVisible(true)}
