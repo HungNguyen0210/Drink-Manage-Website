@@ -14,6 +14,7 @@ const ManageReview = () => {
   const [selectedReview, setSelectedReview] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedRating, setSelectedRating] = useState(null);
 
   // Fetch dữ liệu từ API
   useEffect(() => {
@@ -57,16 +58,17 @@ const ManageReview = () => {
   // Lọc đánh giá theo từ khóa
   const filteredReviews = reviews.filter(
     (review) =>
-      review.product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      review.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      review.email.toLowerCase().includes(searchTerm.toLowerCase()),
+      (selectedRating === null || review.rate === selectedRating) &&
+      (review.product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        review.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        review.email.toLowerCase().includes(searchTerm.toLowerCase())),
   );
+
 
   return (
     <div className="flex items-center justify-center bg-gray-50">
-      <div className="w-full h-[600px] max-w-full rounded-lg bg-white p-6 shadow-lg">
-
-        <div className="mb-4">
+      <div className="h-[600px] w-full max-w-full rounded-lg bg-white p-6 shadow-lg">
+        <div className="mb-4 flex items-center">
           <input
             type="text"
             placeholder="Tìm kiếm bằng tên sản phẩm hoặc tên người đánh giá"
@@ -74,6 +76,23 @@ const ManageReview = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-2/5 rounded-md border border-gray-300 p-2"
           />
+          <span className="ml-8 font-josefin pt-3 text-2xl font-bold">Lọc:</span>
+          <select
+            className="ml-4 rounded-md border border-gray-300 p-2"
+            value={selectedRating || ""}
+            onChange={(e) =>
+              setSelectedRating(
+                e.target.value === "" ? null : Number(e.target.value),
+              )
+            }
+          >
+            <option value="">Tất cả</option>
+            {[1, 2, 3, 4, 5].map((rating) => (
+              <option key={rating} value={rating}>
+                {rating} ⭐
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="overflow-x-auto rounded-lg shadow-md">
@@ -91,7 +110,9 @@ const ManageReview = () => {
                     <th className="w-[250px] px-4 py-3 text-left">Tên</th>
                     <th className="w-[170px] px-4 py-3 text-left">Ngày</th>
                     <th className="w-[100px] px-4 py-3 text-left">Rate</th>
-                    <th className="w-[100px] px-4 py-3 text-center">Hiển thị</th>
+                    <th className="w-[100px] px-4 py-3 text-center">
+                      Hiển thị
+                    </th>
                     <th className="w-[100px] px-4 py-3 text-center">
                       Hành động
                     </th>
@@ -100,7 +121,7 @@ const ManageReview = () => {
               </table>
 
               {/* Nội dung cuộn */}
-              <div className="overflow-y-auto max-h-[430px]">
+              <div className="max-h-[430px] overflow-y-auto">
                 <table className="min-w-full table-auto">
                   <tbody>
                     {filteredReviews.map((review) => (

@@ -6,7 +6,6 @@ import {
   faBars,
   faGlassWater,
   faFileWord,
-  faRightToBracket,
   faClipboardList,
   faReceipt,
   faTicket,
@@ -29,7 +28,6 @@ import { toast } from "react-toastify";
 import { decodeJWT } from "../utils/jwtUtils";
 import ManageReview from "./ReviewManage/ManageReview";
 import ManageNewsletter from "./NewsletterManage/ManageNewsletter";
-import Notification from "./Notification";
 
 const SidebarItem = ({ icon, label, isSidebarExpanded, onClick, isActive }) => (
   <li
@@ -243,11 +241,6 @@ const DashBoard = () => {
         {/* Navbar */}
         <div className="flex justify-between bg-white p-4 shadow-md">
           <div className="ml-auto flex items-center justify-start">
-            {/* Bell Icon */}
-            <div className="relative mr-16">
-              <Notification />
-            </div>
-
             {/* User icon */}
             <div
               className="mr-16 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-black"
