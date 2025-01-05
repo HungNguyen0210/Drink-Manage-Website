@@ -13,6 +13,8 @@ const ManageOrder = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [loading, setLoading] = useState(false); // State để hiển thị trạng thái loading
   const [error, setError] = useState(null);
+  const [startDate, setStartDate] = useState(""); // Ngày bắt đầu
+  const [endDate, setEndDate] = useState("");
 
   // Placeholder orders data
   useEffect(() => {
@@ -34,11 +36,25 @@ const ManageOrder = () => {
   }, []);
 
   // Filter orders based on search term
-  const filteredOrders = orders.filter(
-    (order) =>
+  const filteredOrders = orders.filter((order) => {
+    const orderDate = new Date(order.createdAt);
+    const adjustedEndDate = endDate ? new Date(endDate) : null;
+
+    if (adjustedEndDate) {
+      adjustedEndDate.setDate(adjustedEndDate.getDate() + 1); // Bao gồm cả ngày endDate
+    }
+
+    const isWithinDateRange =
+      (!startDate || new Date(startDate) <= orderDate) &&
+      (!adjustedEndDate || orderDate < adjustedEndDate); // Lọc đến trước nửa đêm ngày hôm sau
+
+    const matchesSearchTerm =
       order.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.email.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+      order.email.toLowerCase().includes(searchTerm.toLowerCase());
+
+    return isWithinDateRange && matchesSearchTerm;
+  });
+
 
   // Handle showing order details
   const handleShowOrderDetail = (order) => {
@@ -83,8 +99,8 @@ const ManageOrder = () => {
       { header: "Tổng tiền cuối", key: "finalPrice", width: 15 },
     ];
 
-    // Thêm dữ liệu
-    orders.forEach((order) => {
+    // Thêm dữ liệu chỉ từ danh sách đã lọc
+    filteredOrders.forEach((order) => {
       worksheet.addRow({
         name: order.name,
         email: order.email,
@@ -112,6 +128,7 @@ const ManageOrder = () => {
     link.click();
   };
 
+
   return (
     <div className="flex items-center justify-center bg-gray-50">
       <div className="h-[600px] w-full max-w-7xl rounded-lg bg-white p-6 shadow-lg">
@@ -124,15 +141,44 @@ const ManageOrder = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-60 rounded-md border border-gray-300 p-2"
           />
+          <div className="flex items-center gap-4">
+            <span className="ml-8 pt-3 font-josefin text-2xl font-bold">
+              Lọc từ:
+            </span>
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="rounded-md border border-gray-300 p-2"
+            />
+            <span className="ml-8 pt-3 font-josefin text-2xl font-bold">
+              Đến:
+            </span>
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="rounded-md border border-gray-300 p-2"
+            />
+            <button
+              onClick={() => {
+                setStartDate("");
+                setEndDate("");
+              }}
+              className="rounded-md bg-gray-500 px-4 pb-2 pt-3 font-josefin text-xl text-white transition-transform duration-200 hover:scale-90"
+            >
+              Tất cả
+            </button>
+          </div>
           <div className="group relative">
             <button
               onClick={exportToExcel}
-              className="mr-10 rounded-md bg-green-800 px-4 pb-2 pt-3 font-josefin text-3xl font-bold text-white transition-transform duration-200 hover:scale-90"
+              className="rounded-md bg-green-800 px-4 pb-2 pt-3 font-josefin text-3xl font-bold text-white transition-transform duration-200 hover:scale-90"
             >
               <FontAwesomeIcon icon={faFileExcel} />
             </button>
-            <span className="absolute left-[-110%] top-1/2 -translate-y-1/2 transform whitespace-nowrap rounded-md bg-gray-800 px-2 py-2 text-sm text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
-              Xuất file Excel
+            <span className="absolute right-[100%] top-1/2 -translate-y-1/2 transform whitespace-nowrap rounded-md bg-gray-800 px-2 py-2 text-sm text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
+              Xuất Excel
             </span>
           </div>
         </div>

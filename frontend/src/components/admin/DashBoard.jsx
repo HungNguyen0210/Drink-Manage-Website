@@ -255,7 +255,7 @@ const DashBoard = () => {
             {/* Dropdown Menu */}
             {isOpen && (
               <div
-                className="absolute top-[56px] z-20 w-[220px] rounded-xl border-2 border-black bg-white text-black shadow-lg"
+                className="absolute right-1 top-[56px] z-20 w-[180px] -translate-x-1/2 transform rounded-xl border-2 border-black bg-white text-black shadow-lg"
                 onMouseEnter={() => setIsOpen(true)}
                 onMouseLeave={() => setIsOpen(false)}
               >
@@ -270,7 +270,9 @@ const DashBoard = () => {
                     <a
                       className="block cursor-pointer rounded-b-lg px-4 py-4 text-center hover:bg-black hover:text-white"
                       onClick={handleLogout}
-                    > Đăng xuất
+                    >
+                      {" "}
+                      Đăng xuất
                     </a>
                   </li>
                 </ul>
