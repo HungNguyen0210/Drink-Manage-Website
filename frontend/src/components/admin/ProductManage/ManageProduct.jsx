@@ -19,6 +19,10 @@ const ManageProduct = () => {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [displayHotFilter, setDisplayHotFilter] = useState("all");
+  const [displayTypeFilter, setDisplayTypeFilter] = useState("all");
+  const [categories, setCategories] = useState([]);
 
   // Tách riêng hàm fetchProducts để tái sử dụng
   const fetchProducts = async () => {
@@ -33,8 +37,18 @@ const ManageProduct = () => {
     }
   };
 
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/api/categories");
+      setCategories(response.data.data);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+
   useEffect(() => {
     fetchProducts();
+    fetchCategories();
   }, []);
 
   useEffect(() => {
@@ -57,9 +71,16 @@ const ManageProduct = () => {
   };
 
   // Lọc sản phẩm theo từ khóa tìm kiếm
-  const filteredProducts = products.filter((product) =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+  const filteredProducts = products.filter((product) => {
+    return (
+      (categoryFilter === "all" || product.category?.name === categoryFilter) &&
+      (displayHotFilter === "all" ||
+        product.displayHot.toString() === displayHotFilter) &&
+      (displayTypeFilter === "all" ||
+        product.displayType.toString() === displayTypeFilter) &&
+      product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  });
 
   // Hàm toggle trạng thái display
   const toggleDisplayType = async (id) => {
@@ -108,25 +129,52 @@ const ManageProduct = () => {
     <div className="flex items-center justify-center bg-gray-50">
       <div className="h-[600px] w-full max-w-7xl rounded-lg bg-white p-6 shadow-lg">
         {/* Tìm kiếm sản phẩm */}
-        <div className="mb-4 flex items-center justify-between">
+        <div className="mb-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <input
             type="text"
-            placeholder="Tìm kiếm bằng tên hoặc thực đơn"
+            placeholder="Tìm kiếm bằng tên sản phẩm"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-72 rounded-md border border-gray-300 p-2"
           />
-          <div className="group relative">
-            <button
-              onClick={() => setShowAddModal(true)}
-              className="rounded-full bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+          <div className="flex gap-4">
+            <select
+              className="rounded-md border border-gray-300 p-2"
+              value={categoryFilter}
+              onChange={(e) => setCategoryFilter(e.target.value)}
             >
-              <FontAwesomeIcon icon={faPlus} />
-            </button>
-            <span className="absolute bottom-full left-1/2 mb-2 -translate-x-1/2 transform whitespace-nowrap rounded-md bg-gray-800 px-4 py-2 text-sm text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
-              Tạo sản phẩm
-            </span>
+              <option value="all">Tất cả thực đơn</option>
+              {categories.map((category) => (
+                <option key={category._id} value={category.name}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+            <select
+              className="rounded-md border border-gray-300 p-2"
+              value={displayHotFilter}
+              onChange={(e) => setDisplayHotFilter(e.target.value)}
+            >
+              <option value="all">Tất cả trạng thái Hot</option>
+              <option value="1">Hot</option>
+              <option value="2">Không Hot</option>
+            </select>
+            <select
+              className="rounded-md border border-gray-300 p-2"
+              value={displayTypeFilter}
+              onChange={(e) => setDisplayTypeFilter(e.target.value)}
+            >
+              <option value="all">Tất cả trạng thái hoạt động</option>
+              <option value="1">Hoạt động</option>
+              <option value="2">Không hoạt động</option>
+            </select>
           </div>
+          <button
+            onClick={() => setShowAddModal(true)}
+            className="rounded-full bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+          >
+            <FontAwesomeIcon icon={faPlus} />
+          </button>
         </div>
 
         {/* Component AddProduct */}
