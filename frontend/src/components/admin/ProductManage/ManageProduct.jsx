@@ -168,6 +168,18 @@ const ManageProduct = () => {
               <option value="1">Hoạt động</option>
               <option value="2">Không hoạt động</option>
             </select>
+            <button
+              onClick={() => {
+                setCategoryFilter("all");
+                setDisplayHotFilter("all");
+                setDisplayTypeFilter("all");
+                setSearchTerm("");
+                fetchProducts(); // Lấy lại toàn bộ sản phẩm từ API
+              }}
+              className="rounded-md bg-gray-500 px-4 pb-2 pt-3 font-josefin text-xl text-white transition-transform duration-200 hover:scale-90"
+            >
+              Tất cả
+            </button>
           </div>
           <button
             onClick={() => setShowAddModal(true)}

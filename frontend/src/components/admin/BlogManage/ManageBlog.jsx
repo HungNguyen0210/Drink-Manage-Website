@@ -19,6 +19,8 @@ const ManageBlog = () => {
   const [isEditFormVisible, setEditFormVisible] = useState(false);
   const [selectedBlog, setSelectedBlog] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [displayHotFilter, setDisplayHotFilter] = useState("all");
+  const [displayTypeFilter, setDisplayTypeFilter] = useState("all");
 
   // Lọc blog dựa trên từ khóa tìm kiếm
   useEffect(() => {
@@ -47,11 +49,28 @@ const ManageBlog = () => {
     return new Date(timestamp).toLocaleDateString("en-GB", options);
   };
 
+  // Lọc các blog dựa trên các bộ lọc
   const filteredBlogs = blogList.filter((blog) => {
-    return (
-      blog.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const matchesSearchTerm = blog.title
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const matchesHotFilter =
+      displayHotFilter === "all" ||
+      (displayHotFilter === "1" && blog.displayHot === 1) ||
+      (displayHotFilter === "2" && blog.displayHot === 2);
+    const matchesBannerFilter =
+      displayTypeFilter === "all" ||
+      (displayTypeFilter === "1" && blog.displayBanner === 1) ||
+      (displayTypeFilter === "2" && blog.displayBanner === 2);
+
+    return matchesSearchTerm && matchesHotFilter && matchesBannerFilter;
   });
+
+  // Reset filters to show all
+  const resetFilters = () => {
+    setDisplayHotFilter("all");
+    setDisplayTypeFilter("all");
+  };
 
   const toggleDisplayHot = async (id) => {
     try {
@@ -125,14 +144,51 @@ const ManageBlog = () => {
       <div className="h-[600px] w-full max-w-7xl rounded-lg bg-white p-6 shadow-lg">
         {/* Search and Add Blog */}
         <div className="mb-4 flex items-center justify-between">
-          <input
-            type="text"
-            placeholder="Tìm kiếm bằng tiêu đề "
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-60 rounded-md border border-gray-300 p-2"
-          />
-          {/* Tooltip và nút Plus */}
+          {/* Thanh tìm kiếm */}
+          <div className="flex items-center">
+            <input
+              type="text"
+              placeholder="Tìm kiếm bằng tiêu đề"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-60 rounded-md border border-gray-300 p-2"
+            />
+          </div>
+
+          {/* Bộ lọc trạng thái Hot, Banner và Tất cả */}
+          <div className="flex items-center space-x-4">
+            {/* Bộ lọc trạng thái Hot */}
+            <select
+              className="rounded-md border border-gray-300 p-2"
+              value={displayHotFilter}
+              onChange={(e) => setDisplayHotFilter(e.target.value)}
+            >
+              <option value="all">Tất cả trạng thái Hot</option>
+              <option value="1">Hot</option>
+              <option value="2">Không Hot</option>
+            </select>
+
+            {/* Bộ lọc trạng thái Banner */}
+            <select
+              className="rounded-md border border-gray-300 p-2"
+              value={displayTypeFilter}
+              onChange={(e) => setDisplayTypeFilter(e.target.value)}
+            >
+              <option value="all">Tất cả Banner</option>
+              <option value="1">Bật Banner</option>
+              <option value="2">Tắt Banner</option>
+            </select>
+
+            {/* Reset Filters Button */}
+            <button
+              onClick={resetFilters}
+              className="rounded-md bg-gray-500 px-4 pb-1 pt-3 font-josefin text-xl text-white transition-transform duration-200 hover:scale-90"
+            >
+              Tất cả
+            </button>
+          </div>
+
+          {/* Nút thêm Blog */}
           <div className="group relative">
             <button
               onClick={() => setAddFormVisible(true)}
@@ -145,6 +201,7 @@ const ManageBlog = () => {
             </span>
           </div>
         </div>
+
         {loading ? (
           // Hiển thị phần loading nếu dữ liệu chưa được tải
           <div className="flex h-[255px] w-full items-center justify-center lg:h-[200px]">
@@ -153,7 +210,7 @@ const ManageBlog = () => {
         ) : (
           <div className="overflow-x-auto rounded-lg shadow-md">
             <table className="min-w-full table-auto">
-              <thead className=" bg-gray-100">
+              <thead className="bg-gray-100">
                 <tr>
                   <th className="w-[130px] px-4 py-3 text-center">Ảnh</th>
                   <th className="w-[253px] px-4 py-3 text-center">Tiêu đề</th>
