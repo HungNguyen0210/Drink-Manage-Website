@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import Cookies from "js-cookie";
 
 const Review = ({ productId }) => {
   const [reviews, setReviews] = useState([]);
@@ -49,6 +50,18 @@ const Review = ({ productId }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const jwtToken = Cookies.get("jwtToken"); // Lấy token từ Cookies
+
+    if (!jwtToken) {
+      toast.error("Bạn cần đăng nhập để gửi đánh giá!");
+      return;
+    }
+
+    if (!jwtToken) {
+      toast.error("Bạn cần đăng nhập để gửi đánh giá!");
+      return;
+    }
 
     if (!formData.name.trim()) {
       toast.error("Vui lòng nhập tên của bạn!");
@@ -115,7 +128,7 @@ const Review = ({ productId }) => {
   };
 
   return (
-    <div className="mt-16 flex mb-20 w-full flex-col p-4 md:p-0">
+    <div className="mb-20 mt-16 flex w-full flex-col p-4 md:p-0">
       <h2 className="mb-4 flex font-josefin text-4xl font-bold text-[#663402]">
         Đánh giá sản phẩm
       </h2>
