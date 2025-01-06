@@ -1,6 +1,7 @@
 import crypto from "crypto";
 import Order from "../models/order.model.js";
 import mongoose from "mongoose";
+import { sendInvoiceEmail } from "../services/emailService.js";
 
 export const vnpayReturn = async (req, res) => {
   try {
@@ -56,6 +57,21 @@ export const vnpayReturn = async (req, res) => {
 
     if (!order) {
       return res.status(404).json({ message: "Không tìm thấy đơn hàng." });
+    }
+
+    // Gửi email hóa đơn
+    try {
+      const invoiceDetails = {
+        name: order.name,
+        email: order.email,
+        finalPrice: order.finalPrice,
+        discount: order.discount,
+        cart: order.cart,
+      };
+
+      await sendInvoiceEmail(order.email, invoiceDetails);
+    } catch (emailError) {
+      console.error("Lỗi khi gửi email xác nhận thanh toán:", emailError);
     }
 
     // Chuyển hướng người dùng đến trang thành công

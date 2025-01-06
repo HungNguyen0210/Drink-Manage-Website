@@ -5,6 +5,7 @@ import { ObjectId } from "mongodb";
 import jwt from "jsonwebtoken";
 import { format } from "date-fns";
 import crypto from "crypto";
+import { sendInvoiceEmail } from "../services/emailService.js";
 
 export const getOrder = async (req, res) => {
   try {
@@ -195,6 +196,22 @@ export const createOrder = async (req, res) => {
     } else {
       newOrder.status = 1;
       await newOrder.save();
+    }
+
+    // Gửi email hóa đơn
+    try {
+      const invoiceDetails = {
+        name,
+        email,
+        finalPrice: finalPrice,
+        discount,
+        cart: updatedCart,
+      };
+
+      await sendInvoiceEmail(email, invoiceDetails);
+      console.log("Email hóa đơn đã được gửi thành công.");
+    } catch (emailError) {
+      console.error("Lỗi khi gửi email hóa đơn:", emailError);
     }
 
     res.status(201).json({
