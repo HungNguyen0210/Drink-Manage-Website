@@ -172,15 +172,13 @@ const DashBoard = () => {
               isActive={activeComponent === "Account"}
             />
           )}
-          {Array.isArray(userRole) && userRole.includes("admin") && (
-            <SidebarItem
-              icon={faChartColumn}
-              label="Thống kê"
-              isSidebarExpanded={isSidebarExpanded}
-              onClick={() => handleSetActiveComponent("Chart")}
-              isActive={activeComponent === "Chart"}
-            />
-          )}
+          <SidebarItem
+            icon={faChartColumn}
+            label="Thống kê"
+            isSidebarExpanded={isSidebarExpanded}
+            onClick={() => handleSetActiveComponent("Chart")}
+            isActive={activeComponent === "Chart"}
+          />
           <SidebarItem
             icon={faReceipt}
             label="Đơn Hàng"

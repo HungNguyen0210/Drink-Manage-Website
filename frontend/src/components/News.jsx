@@ -87,18 +87,16 @@ const News = () => {
 
                 {/* Phần dưới: Tiêu đề và đoạn trích */}
                 <div className="p-2 text-center">
-                  <h2 className="mb-2 text-lg font-bold text-[#633402]">
+                  <h2 className="mb-2 text-lg h-14 font-bold text-[#633402]">
                     {blog.title.length > 50
                       ? `${blog.title.slice(0, 50)}...`
                       : blog.title}
                   </h2>
                   <p
-                    className="pb-2 text-sm text-[#555]"
+                    className="pb-2 text-sm line-clamp-1 w-64 h-5 text-[#555]"
                     dangerouslySetInnerHTML={{
                       __html:
-                        blog.content.length > 50
-                          ? `${blog.content.slice(0, 40)}...`
-                          : blog.content,
+                        blog.content,
                     }}
                   />
                 </div>

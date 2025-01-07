@@ -130,7 +130,8 @@ export const createCustomerAccount = async (req, res) => {
       password,
       gmail,
       numbers,
-      role: "customer", // Đặt mặc định role là "customer"
+      role: "customer",
+      isActive: 2, // Đặt mặc định role là "customer"
     });
     const savedAccount = await newAccount.save();
 

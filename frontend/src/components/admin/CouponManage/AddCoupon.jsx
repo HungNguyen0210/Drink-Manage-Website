@@ -61,6 +61,7 @@ const AddCoupon = ({ onClose, onAddSuccess }) => {
               onChange={handleChange}
               className="w-full rounded-md border border-gray-300 p-2"
               placeholder="Nhập mã coupon"
+              required
             />
           </div>
 
@@ -75,6 +76,7 @@ const AddCoupon = ({ onClose, onAddSuccess }) => {
               onChange={handleChange}
               className="w-full rounded-md border border-gray-300 p-2"
               placeholder="Nhập giá trị giảm"
+              required
             />
           </div>
 
@@ -89,6 +91,7 @@ const AddCoupon = ({ onClose, onAddSuccess }) => {
               onChange={handleChange}
               className="w-full rounded-md border border-gray-300 p-2"
               placeholder="Nhập số lượng coupon"
+              required
             />
           </div>
 

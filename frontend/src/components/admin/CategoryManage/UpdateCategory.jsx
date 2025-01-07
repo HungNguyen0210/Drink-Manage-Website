@@ -19,11 +19,6 @@ const UpdateCategory = ({ category, onClose, onUpdateCategory }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!updatedCategory.name) {
-      alert("Vui lòng điền tên thực đơn.");
-      return;
-    }
-
     // Kiểm tra tên mới có trùng với tên cũ không
     if (updatedCategory.name === category.name) {
       setError("Tên thực đơn đã tồn tại. Vui lòng chọn tên khác.");
@@ -69,6 +64,7 @@ const UpdateCategory = ({ category, onClose, onUpdateCategory }) => {
               value={updatedCategory.name}
               onChange={handleInputChange}
               className="w-full rounded-md border border-gray-300 p-2"
+              required
             />
             {error && ( // Hiển thị thông báo lỗi
               <div className="text-sm text-red-500">{error}</div>

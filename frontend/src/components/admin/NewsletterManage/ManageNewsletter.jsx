@@ -257,7 +257,6 @@ const ManageNewsletter = () => {
             />
           </div>
 
-          {/* Nút "Chọn tất cả"/"Hủy" */}
           <button
             onClick={handleSelectAll}
             className={`rounded-md w-[140px] px-4 py-2 text-white transition-transform duration-200 hover:scale-95 ${
@@ -282,20 +281,20 @@ const ManageNewsletter = () => {
             <table className="min-w-full table-auto">
               <thead className="bg-gray-100">
                 <tr>
-                  <th className="w-[200px] px-4 py-3 text-center">Chọn</th>
-                  <th className="w-[340px] px-4 py-3 text-left">Email</th>
-                  <th className="w-[200px] px-4 py-3 text-left">Ngày gửi</th>
+                  <th className="w-[317px] px-4 py-3 text-center">Chọn</th>
+                  <th className="w-[510px] px-4 py-3 text-left">Email</th>
+                  <th className="w-[317px] px-4 py-3 text-left">Ngày gửi</th>
                 </tr>
               </thead>
             </table>
 
             {/* Nội dung cuộn */}
-            <div className="max-h-[380px] overflow-y-auto">
+            <div className="max-h-[360px] overflow-y-auto">
               <table className="min-w-full table-auto">
                 <tbody>
                   {filteredNewsletters.map((newsletter) => (
                     <tr key={newsletter._id} className="border-b">
-                      <td className="w-[210px] px-4 py-6 text-center">
+                      <td className="w-[317px] px-4 py-6 text-center">
                         <input
                           type="checkbox"
                           checked={newsletter.checkbox}
@@ -303,10 +302,10 @@ const ManageNewsletter = () => {
                           className="h-4 w-4"
                         />
                       </td>
-                      <td className="w-[290px] px-4 py-6 text-left font-bold">
+                      <td className="w-[540px] px-4 py-6 text-left font-bold">
                         {newsletter.gmail}
                       </td>
-                      <td className="w-[200px] px-4 py-6 text-left font-bold">
+                      <td className="w-[317px] px-4 py-6 text-left font-bold">
                         {new Date(newsletter.createdAt).toLocaleDateString()}
                       </td>
                     </tr>
@@ -316,11 +315,11 @@ const ManageNewsletter = () => {
             </div>
           </div>
         )}
-        <div className="mb-4 flex items-center pt-6">
+        <div className="mb-4 flex items-center pt-4">
           <input
             type="text"
             placeholder="Chọn mã coupon để gửi"
-            className="w-[270px] border border-gray-300 p-2"
+            className="w-[313px] border border-gray-300 p-2"
             list="coupon-list" // Liên kết với datalist
             value={selectedCoupon} // Giá trị input sẽ được liên kết với state
             onChange={handleCouponSelect}

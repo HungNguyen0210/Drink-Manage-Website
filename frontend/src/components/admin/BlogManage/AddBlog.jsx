@@ -9,16 +9,21 @@ const AddBlog = ({ onClose, onBlogAdded }) => {
   const [image, setImage] = useState(null);
   const [displayHot, setDisplayHot] = useState(1);
   const [error, setError] = useState("");
+  const [previewImage, setPreviewImage] = useState(null);
 
   const handleImageChange = (e) => {
-    setImage(e.target.files[0]);
+    const file = e.target.files[0];
+    if (file) {
+      setImage(file);
+      setPreviewImage(URL.createObjectURL(file)); // Set preview image URL
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!title || !content || !image || !displayHot) {
-      setError("All fields are required.");
+      setError("Yêu cầu nhập đầy đủ tất cả.");
       return;
     }
 
@@ -38,16 +43,15 @@ const AddBlog = ({ onClose, onBlogAdded }) => {
       );
       onBlogAdded(response.data.data); // Cập nhật danh sách blog sau khi thêm thành công
       onClose();
-    } catch (err) {
+    } catch (error) {
       setError("Failed to add blog. Please try again.");
     }
   };
 
   return (
-    <div className="fixed z-20 inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+    <div className="fixed inset-0 z-20 flex items-center justify-center bg-gray-800 bg-opacity-50">
       <div className="w-full max-w-7xl rounded-lg bg-white p-6 shadow-lg">
         <h2 className="mb-4 text-center text-4xl font-bold">Tạo bài viết</h2>
-        {error && <p className="mb-4 text-red-500">{error}</p>}
         <form onSubmit={handleSubmit}>
           <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2">
             {/* Phần Tiêu đề và Ảnh */}
@@ -77,10 +81,18 @@ const AddBlog = ({ onClose, onBlogAdded }) => {
                   <option value={2}>Không Hot</option>
                 </select>
               </div>
-              <div className="mb-4">
-                <label className="mb-2 block text-xl font-medium text-gray-700">
+              <div className="mb-4 flex flex-col">
+                <label className="mb-2 block pt-4 text-xl font-medium text-black">
                   Ảnh bài viết
                 </label>
+                <span className="text-base">
+                  + Kích thước phù hợp cho Banner là{" "}
+                  <span className="font-bold text-red-900">1920px * 576px</span>
+                </span>
+                <span className="mb-2 my-1 text-base">
+                  + Kích thước phù hợp cho Hot là{" "}
+                  <span className="font-bold text-red-900">1280px * 544px</span>
+                </span>
                 <input
                   type="file"
                   accept="image/*"
@@ -88,6 +100,13 @@ const AddBlog = ({ onClose, onBlogAdded }) => {
                   className="w-full"
                   required
                 />
+                {previewImage && (
+                  <img
+                    src={previewImage}
+                    alt="Preview"
+                    className="mt-4 h-48 w-auto max-w-full object-contain"
+                  />
+                )}
               </div>
             </div>
             {/* Phần Content (Quill) */}
@@ -106,10 +125,13 @@ const AddBlog = ({ onClose, onBlogAdded }) => {
                   maxHeight: "480px",
                 }}
                 className="w-full rounded-md border border-gray-300"
+                required
               />
             </div>
           </div>
-
+          {error && (
+            <p className="mb-4 flex justify-center text-red-500">{error}</p>
+          )}
           <div className="flex justify-center space-x-40">
             <button
               type="button"

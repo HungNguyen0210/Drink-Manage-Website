@@ -78,23 +78,33 @@ const ManageAccount = () => {
     }
   };
 
-  const handleAddAccount = (newAccount) => {
-    axios
-      .post("http://localhost:5000/api/accounts", newAccount, {
-        headers: {
-          Authorization: `Bearer ${Cookies.get("jwtToken")}`, // Lấy token từ localStorage (nếu có)
+  const handleAddAccount = async (newAccount) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/accounts",
+        newAccount,
+        {
+          headers: {
+            Authorization: `Bearer ${Cookies.get("jwtToken")}`,
+          },
+          withCredentials: true,
         },
-        withCredentials: true,
-      })
-      .then((response) => {
+      );
+
+      if (response.data.success) {
         setAccounts([...accounts, response.data.data]);
         toast.success("Thêm nhân viên thành công");
-      })
-      .catch((error) => {
-        console.error("Error adding account:", error);
-        toast.error(error.response.data.message || "Có lỗi xảy ra");
-      });
+      } else {
+        toast.error(response.data.message || "Có lỗi xảy ra");
+      }
+      return response.data; // Return the response to be used by AddAccount
+    } catch (error) {
+      console.error("Error adding account:", error.response);
+      toast.error(error.response?.data?.message || "Có lỗi xảy ra");
+      throw error; // Throw the error so AddAccount can catch it
+    }
   };
+
 
   const handleUpdateAccount = (updatedAccount) => {
     setAccounts((prevAccounts) =>
