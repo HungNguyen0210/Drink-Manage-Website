@@ -81,12 +81,17 @@ export const createOrder = async (req, res) => {
           throw new Error("Sản phẩm không tồn tại");
         }
         return {
-          product: product._id,
+          product: {
+            _id: product._id,
+            name: product.name,
+            price: product.price,
+          },
           quantity: item.quantity,
           totalPrice: item.quantity * item.price,
         };
       })
     );
+
 
     // Kiểm tra và cập nhật coupon (nếu có)
     if (couponCode) {
