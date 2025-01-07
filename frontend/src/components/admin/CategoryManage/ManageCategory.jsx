@@ -119,9 +119,13 @@ const ManageCategory = () => {
             <table className="min-w-full table-auto">
               <thead className="bg-gray-100">
                 <tr>
-                  <th className="w-[180px] px-4 py-3 text-center">Tên thực đơn</th>
+                  <th className="w-[180px] px-4 py-3 text-center">
+                    Tên thực đơn
+                  </th>
                   <th className="w-[200px] px-4 py-3 text-center">Ngày tạo</th>
-                  <th className="w-[200px] px-4 py-3 text-center">Ngày cập nhật</th>
+                  <th className="w-[200px] px-4 py-3 text-center">
+                    Ngày cập nhật
+                  </th>
                   <th className="w-[100px] px-4 py-3 text-center">Hoạt động</th>
                   <th className="w-[150px] px-4 py-3 text-center">Chỉnh sửa</th>
                 </tr>
@@ -129,19 +133,21 @@ const ManageCategory = () => {
             </table>
 
             {/* Nội dung cuộn */}
-            <div className="max-h-[500px] overflow-y-auto">
+            <div className="max-h-[460px] overflow-y-auto">
               <table className="min-w-full table-auto">
                 <tbody>
                   {filteredCategories.map((category) => (
                     <tr key={category._id} className="border-b">
-                      <td className="px-4 py-6 font-bold text-center">{category.name}</td>
-                      <td className="px-4 py-6 text-center">
+                      <td className="px-4 py-4 text-center font-bold">
+                        {category.name}
+                      </td>
+                      <td className="px-4 py-4 text-center">
                         {new Date(category.createdAt).toLocaleDateString()}
                       </td>
-                      <td className="px-4 py-6 text-center">
+                      <td className="px-4 py-4 text-center">
                         {new Date(category.updatedAt).toLocaleDateString()}
                       </td>
-                      <td className="px-4 py-6 text-center text-2xl">
+                      <td className="px-4 py-4 text-center text-2xl">
                         <div className="group relative">
                           <FontAwesomeIcon
                             icon={
@@ -159,7 +165,7 @@ const ManageCategory = () => {
                           </span>
                         </div>
                       </td>
-                      <td className="px-4 py-6 text-center text-xl">
+                      <td className="px-4 py-4 text-center text-xl">
                         <div className="group relative">
                           <button
                             onClick={() => openUpdateForm(category)}

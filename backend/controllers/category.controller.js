@@ -21,6 +21,16 @@ export const createCategory = async (req, res) => {
   }
 
   try {
+    const existingCategory = await Category.findOne({
+      name: { $regex: new RegExp(`^${name}$`, "i") },
+    });
+
+    if (existingCategory) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Category name already exists" });
+    }
+
     const newCategory = new Category({ name, isActive });
     await newCategory.save();
 
