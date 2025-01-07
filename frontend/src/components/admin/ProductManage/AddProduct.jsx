@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { toast } from "react-toastify";
 
 const AddProduct = ({ showModal, setShowModal }) => {
   const [newProduct, setNewProduct] = useState({

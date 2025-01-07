@@ -106,7 +106,7 @@ const SidebarCart = ({ handleCartClick }) => {
         <strong>Hãy đăng nhập</strong> để có thể xem lại lịch sử đơn hàng
       </div>,
       {
-        autoClose: 5000, // Close after 5 seconds
+        autoClose: 2000, // Close after 5 seconds
         hideProgressBar: false, // Show progress bar
         closeOnClick: true, // Close when clicked
         pauseOnHover: true, // Pause when hovering

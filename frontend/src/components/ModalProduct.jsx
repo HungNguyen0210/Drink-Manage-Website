@@ -35,8 +35,10 @@ const ModalProduct = ({
     const existingItem = tempCart.find(
       (item) => item.productId === selectedProduct._id,
     );
+
     if (existingItem) {
       existingItem.quantity += quantity; // Cập nhật số lượng
+      toast.success("Thêm vào giỏ hàng thành công"); // Thông báo khi cập nhật số lượng
     } else {
       // Thêm sản phẩm mới vào giỏ hàng
       tempCart.push({
@@ -46,7 +48,7 @@ const ModalProduct = ({
         price: selectedProduct.sell_price,
         quantity,
       });
-      toast.success("Thêm vào giỏ hàng thành công");
+      toast.success("Thêm vào giỏ hàng thành công"); // Thông báo khi thêm sản phẩm mới
     }
 
     // Lưu giỏ hàng vào localStorage
@@ -60,6 +62,7 @@ const ModalProduct = ({
     // Đóng Modal
     onClose();
   };
+
 
   return (
     <div className="fixed left-0 top-0 z-50 flex h-screen w-screen items-center justify-center bg-black bg-opacity-50">
