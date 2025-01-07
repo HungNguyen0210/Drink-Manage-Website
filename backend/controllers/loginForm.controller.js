@@ -89,7 +89,6 @@ export const sendOTP = async (req, res) => {
           message: "Gửi email thất bại. Vui lòng thử lại sau.",
         });
       }
-      console.log("Email sent:", info);
       res.status(200).json({
         success: true,
         message: "Mã OTP đã được gửi đến email của bạn.",

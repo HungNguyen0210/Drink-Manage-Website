@@ -92,7 +92,6 @@ export const createOrder = async (req, res) => {
       })
     );
 
-
     // Kiểm tra và cập nhật coupon (nếu có)
     if (couponCode) {
       try {
@@ -116,11 +115,6 @@ export const createOrder = async (req, res) => {
 
         coupon.currentUsage += 1;
         await coupon.save();
-
-        console.log(`Updated coupon usage:`, {
-          currentUsage: coupon.currentUsage,
-          maxUsage: coupon.maxUsage,
-        });
       } catch (error) {
         console.error("Lỗi khi xử lý coupon:", error);
         return res.status(500).json({ message: "Lỗi khi xử lý coupon!" });
