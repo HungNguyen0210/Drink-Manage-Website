@@ -115,7 +115,7 @@ const ManageCoupon = () => {
               <table className="min-w-full table-auto">
                 <tbody>
                   {filteredCoupons.map((coupon) => (
-                    <tr key={coupon._id} className="bg-white">
+                    <tr key={coupon._id} className="border-b">
                       <td className="w-[200px] px-4 py-6 text-center font-bold">
                         {coupon.code}
                       </td>

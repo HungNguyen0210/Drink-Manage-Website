@@ -14,6 +14,8 @@ const ManageNewsletter = () => {
   const [validCoupons, setValidCoupons] = useState([]);
   const [selectedCoupon, setSelectedCoupon] = useState(null);
   const [isSending, setIsSending] = useState(false);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
   const updateNewsletterCheckbox = async (id, checkbox) => {
     try {
@@ -77,9 +79,25 @@ const ManageNewsletter = () => {
     fetchNewsletters();
   }, []);
   // Lọc danh sách theo email
-  const filteredNewsletters = newsletters.filter((newsletter) =>
-    newsletter.gmail.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+  const filteredNewsletters = newsletters.filter((newsletter) => {
+    const newsletterDate = new Date(newsletter.createdAt);
+    const adjustedEndDate = endDate ? new Date(endDate) : null;
+
+    if (adjustedEndDate) {
+      adjustedEndDate.setDate(adjustedEndDate.getDate() + 1); // Include the entire endDate, up to the next day
+      adjustedEndDate.setHours(12, 0, 0, 0); // Set end time to 12 PM on the endDate
+    }
+
+    const isWithinDateRange =
+      (!startDate || new Date(startDate) <= newsletterDate) &&
+      (!adjustedEndDate || newsletterDate < adjustedEndDate); // Filter to include end date
+
+    const matchesSearchTerm = newsletter.gmail
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+
+    return isWithinDateRange && matchesSearchTerm;
+  });
 
   // Thay đổi trạng thái checkbox
   const handleCheckboxChange = async (_id) => {
@@ -211,7 +229,7 @@ const ManageNewsletter = () => {
 
   return (
     <div className="flex items-center justify-center bg-gray-50">
-      <div className="h-[600px] w-full max-w-3xl rounded-lg bg-white p-6 shadow-lg">
+      <div className="h-[600px] w-full max-w-7xl rounded-lg bg-white p-6 shadow-lg">
         {/* Tìm kiếm người gửi mail */}
         <div className="mb-4 flex items-center justify-between">
           {/* Ô tìm kiếm */}
@@ -222,11 +240,27 @@ const ManageNewsletter = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-72 rounded-md border border-gray-300 p-2"
           />
+          <div className="mb-4 flex items-center">
+            <label className="mr-4 mt-8 font-josefin text-2xl font-bold">Từ:</label>
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="mt-5 w-40 rounded-md border border-gray-300 p-2"
+            />
+            <label className="mx-4 mt-8 font-josefin text-2xl font-bold">Đến:</label>
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="mt-5 w-40 rounded-md border border-gray-300 p-2"
+            />
+          </div>
 
           {/* Nút "Chọn tất cả"/"Hủy" */}
           <button
             onClick={handleSelectAll}
-            className={`rounded-md px-4 py-2 text-white transition-transform duration-200 hover:scale-95 ${
+            className={`rounded-md w-[140px] px-4 py-2 text-white transition-transform duration-200 hover:scale-95 ${
               allSelected ? "bg-red-600" : "bg-blue-500"
             }`}
           >
@@ -248,9 +282,9 @@ const ManageNewsletter = () => {
             <table className="min-w-full table-auto">
               <thead className="bg-gray-100">
                 <tr>
-                  <th className="w-1/3 px-4 py-3 text-center">Chọn</th>
-                  <th className="w-1/3 px-4 py-3 text-left">Email</th>
-                  <th className="w-1/3 px-4 py-3 text-right">Ngày gửi</th>
+                  <th className="w-[200px] px-4 py-3 text-center">Chọn</th>
+                  <th className="w-[340px] px-4 py-3 text-left">Email</th>
+                  <th className="w-[200px] px-4 py-3 text-left">Ngày gửi</th>
                 </tr>
               </thead>
             </table>
@@ -261,7 +295,7 @@ const ManageNewsletter = () => {
                 <tbody>
                   {filteredNewsletters.map((newsletter) => (
                     <tr key={newsletter._id} className="border-b">
-                      <td className="w-1/3 px-4 py-6 text-center">
+                      <td className="w-[210px] px-4 py-6 text-center">
                         <input
                           type="checkbox"
                           checked={newsletter.checkbox}
@@ -269,10 +303,10 @@ const ManageNewsletter = () => {
                           className="h-4 w-4"
                         />
                       </td>
-                      <td className="w-2/3 px-4 py-6 font-bold">
+                      <td className="w-[290px] px-4 py-6 text-left font-bold">
                         {newsletter.gmail}
                       </td>
-                      <td className="w-1/3 px-4 py-6 font-bold">
+                      <td className="w-[200px] px-4 py-6 text-left font-bold">
                         {new Date(newsletter.createdAt).toLocaleDateString()}
                       </td>
                     </tr>
@@ -285,8 +319,8 @@ const ManageNewsletter = () => {
         <div className="mb-4 flex items-center pt-6">
           <input
             type="text"
-            placeholder="Chọn mã coupon mà bạn muốn gửi cho khách hàng"
-            className="w-[420px] border border-gray-300 p-2"
+            placeholder="Chọn mã coupon để gửi"
+            className="w-[270px] border border-gray-300 p-2"
             list="coupon-list" // Liên kết với datalist
             value={selectedCoupon} // Giá trị input sẽ được liên kết với state
             onChange={handleCouponSelect}

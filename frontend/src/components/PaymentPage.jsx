@@ -6,6 +6,7 @@ import { faTimes, faCartPlus } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 import { decodeJWT } from "./utils/jwtUtils";
 import Cookies from "js-cookie";
+import Loading from "../components/website/LoadingWhite";
 
 const PaymentPage = () => {
   const location = useLocation();
@@ -16,6 +17,7 @@ const PaymentPage = () => {
   const [couponCode, setCouponCode] = useState("");
   const [discount, setDiscount] = useState(0);
   const [validCoupons, setValidCoupons] = useState([]); // Dữ liệu coupons từ API
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchAccountData = async () => {
@@ -241,6 +243,7 @@ const PaymentPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     // Lấy thông tin từ form
     const formData = {
@@ -290,6 +293,8 @@ const PaymentPage = () => {
     } catch (error) {
       console.error("Lỗi khi tạo đơn hàng:", error);
       toast.error("Đã có lỗi xảy ra, vui lòng thử lại.");
+    } finally {
+      setLoading(false); 
     }
   };
 
@@ -460,8 +465,13 @@ const PaymentPage = () => {
             <button
               type="submit"
               className="mt-8 h-16 w-full rounded-2xl bg-black px-4 font-josefin text-xl font-bold text-white transition-transform duration-200 hover:scale-95"
+              disabled={loading} // Disable the button while loading
             >
-              ĐẶT NGAY {finalPrice.toLocaleString()}₫
+              {loading ? (
+                <Loading /> // Show loading spinner
+              ) : (
+                `ĐẶT NGAY ${finalPrice.toLocaleString()}₫`
+              )}
             </button>
           </form>
         </div>

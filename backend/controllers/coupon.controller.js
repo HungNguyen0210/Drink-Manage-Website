@@ -221,8 +221,8 @@ export const sendCoupons = async (req, res) => {
       transporter.sendMail({
         from: process.env.SMTP_USER,
         to: email,
-        subject: "Nhận mã coupon giảm giá!",
-        text: `Bạn đã nhận được mã coupon: ${couponCode}`,
+        subject: "[BAMOSCOFFEE] Nhận mã coupon giảm giá!",
+        text: `Cảm ơn bạn đã quan tâm đến chương trình của chúng tôi. Bamos Coffee xin gửi bạn mã coupon: ${couponCode}`,
       })
     );
 

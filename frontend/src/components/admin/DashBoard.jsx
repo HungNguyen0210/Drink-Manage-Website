@@ -123,7 +123,7 @@ const DashBoard = () => {
       case "Order":
         return <ManageOrder />;
       case "Chart":
-        return userRole && userRole.includes("admin") ? <ManageChart /> : null;
+        return <ManageChart />;
       case "Coupon":
         return <ManageCoupon />;
       case "ProfileAdmin":
@@ -147,7 +147,7 @@ const DashBoard = () => {
         {/* Sidebar Header */}
         <div className="flex items-center justify-between px-4 py-4">
           <span
-            className={`text-lg font-bold ${
+            className={`text-2xl font-bold ${
               !isSidebarExpanded && "hidden group-hover:block"
             }`}
           >
