@@ -53,8 +53,6 @@ export const vnpayReturn = async (req, res) => {
     // Lấy danh sách tên sản phẩm
     const productNames = order.cart.map((item) => item.product.name);
 
-    console.log("Tên sản phẩm trong đơn hàng:", productNames);
-
     // Gửi email hóa đơn (bao gồm tên sản phẩm)
     try {
       const invoiceDetails = {

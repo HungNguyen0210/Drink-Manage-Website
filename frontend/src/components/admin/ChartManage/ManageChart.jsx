@@ -40,7 +40,7 @@ const ManageChart = () => {
 
   const getYesterday = () => {
     const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
+    yesterday.setDate(yesterday.getDate());
     yesterday.setHours(0, 0, 0, 0);
     return yesterday;
   };
@@ -298,7 +298,7 @@ const ManageChart = () => {
       {/* Biểu đồ Pie cho Top 5 sản phẩm bán chạy nhất */}
       <div className="mt-8 flex flex-col items-center justify-center">
         <div className="text-center">
-          <h2 className="mb-2 font-josefin text-4xl font-bold mt-10">
+          <h2 className="mb-2 mt-10 font-josefin text-4xl font-bold">
             Top 5 Sản Phẩm Bán Chạy Nhất
           </h2>
         </div>

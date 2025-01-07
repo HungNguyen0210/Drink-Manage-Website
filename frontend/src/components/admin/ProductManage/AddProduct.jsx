@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
+
 const AddProduct = ({ showModal, setShowModal }) => {
   const [newProduct, setNewProduct] = useState({
     name: "",
@@ -13,6 +15,9 @@ const AddProduct = ({ showModal, setShowModal }) => {
   const [previewImage, setPreviewImage] = useState(null);
   const [categories, setCategories] = useState([]);
   const [error, setError] = useState("");
+  const [priceError, setPriceError] = useState("");
+  const [imageError, setImageError] = useState("");
+  const [backendError, setBackendError] = useState("");
 
   // Lấy danh sách danh mục
   useEffect(() => {
@@ -45,15 +50,20 @@ const AddProduct = ({ showModal, setShowModal }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Reset lỗi trước khi kiểm tra
+    setPriceError("");
+    setImageError("");
+    setBackendError("");
+
+    // Kiểm tra giá giảm và giá gốc
     if (parseFloat(newProduct.sell_price) > parseFloat(newProduct.price)) {
-      setError("Giá giảm phải thấp hơn giá");
+      setPriceError("Giá giảm phải thấp hơn giá gốc");
       return;
     }
 
-    setError("");
-
+    // Kiểm tra ảnh sản phẩm
     if (!newProduct.image) {
-      alert("Hãy chọn ảnh");
+      setImageError("Hãy chọn ảnh cho sản phẩm");
       return;
     }
 
@@ -72,22 +82,24 @@ const AddProduct = ({ showModal, setShowModal }) => {
         formData,
         {
           headers: {
-            "Content-Type": "multipart/form-data", // Đảm bảo là 'multipart/form-data'
+            "Content-Type": "multipart/form-data",
           },
         },
       );
       console.log("Tạo sản phẩm thành công", response.data);
+      setShowModal(false);
     } catch (error) {
-      if (error.response) {
-        console.error("Error adding product", error.response.data); // Kiểm tra error.response
-      } else if (error.request) {
-        console.error("No response received from server", error.request);
+      if (error.response && error.response.status === 400) {
+        setBackendError(
+          error.response.data.message || "Lỗi không xác định từ server",
+        );
       } else {
-        console.error("Error", error.message); // Thông báo lỗi khác
+        console.error("Error adding product", error.message);
+        setBackendError("Có lỗi xảy ra khi tạo sản phẩm");
       }
     }
-    setShowModal(false);
   };
+
 
   const handleNumericInput = (value, field) => {
     if (/^\d*$/.test(value)) {
@@ -116,8 +128,15 @@ const AddProduct = ({ showModal, setShowModal }) => {
                   setNewProduct({ ...newProduct, name: e.target.value })
                 }
                 required
-                className="h-12 w-full rounded-md border border-gray-300 p-2"
+                className={`h-12 w-full rounded-md border ${
+                  error.includes("Sản phẩm đã tồn tại")
+                    ? "border-red-500"
+                    : "border-gray-300"
+                } p-2`}
               />
+              {backendError && (
+                <p className="text-sm text-red-500">{backendError}</p>
+              )}
               <label className="block pb-2 text-xl font-medium">Thực đơn</label>
               <select
                 value={newProduct.category}
@@ -153,16 +172,17 @@ const AddProduct = ({ showModal, setShowModal }) => {
               <input
                 type="text"
                 value={newProduct.sell_price}
-                onChange={(e) => {
-                  handleNumericInput(e.target.value, "sell_price");
-                  setError("");
-                }}
+                onChange={(e) =>
+                  handleNumericInput(e.target.value, "sell_price")
+                }
                 required
                 className={`h-12 w-full rounded-md border ${
-                  error ? "border-red-500" : "border-gray-300"
+                  priceError ? "border-red-500" : "border-gray-300"
                 } p-2`}
               />
-              {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
+              {priceError && (
+                <p className="mt-1 text-sm text-red-500">{priceError}</p>
+              )}
 
               <div className="mt-4 flex space-x-4">
                 <div className="w-1/2">
@@ -214,8 +234,13 @@ const AddProduct = ({ showModal, setShowModal }) => {
                 onChange={handleImageChange}
                 required
                 accept="image/*"
-                className="w-full rounded-md border border-gray-300 p-2"
+                className={`w-full rounded-md border ${
+                  imageError ? "border-red-500" : "border-gray-300"
+                } p-2`}
               />
+              {imageError && (
+                <p className="mt-1 text-sm text-red-500">{imageError}</p>
+              )}
               {previewImage && (
                 <img
                   src={previewImage}

@@ -1,30 +1,44 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
+import axios from "axios";
 
-const AddCategory = ({ onAddCategory, onClose }) => {
+const AddCategory = ({ onAddCategory, onClose, onFetchCategories }) => {
   const [newCategory, setNewCategory] = useState({
     name: "",
-    isActive: 1, // Mặc định là 1 (Active)
+    isActive: 1,
   });
+  const [error, setError] = useState("");
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewCategory({ ...newCategory, [name]: parseInt(value, 10) });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!newCategory.name || !newCategory.isActive) {
-      alert("Please fill in all fields.");
+      setError("Vui lòng điền đầy đủ thông tin.");
       return;
     }
-    const date = new Date().toLocaleDateString("en-GB"); // Format: DD-MM-YYYY
-    onAddCategory({
-      ...newCategory,
-      createdAt: date,
-      updatedAt: date,
-    });
-    onClose(); // Đóng form sau khi thêm xong
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/categories",
+        newCategory,
+      );
+
+      if (response.data.success) {
+        onAddCategory(response.data.data);
+        onFetchCategories(); // Gọi lại hàm fetchCategories từ ManageCategory
+        onClose();
+      }
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        setError(error.response.data.message);
+      } else {
+        setError("Có lỗi xảy ra khi tạo thực đơn.");
+      }
+    }
   };
 
   return (
@@ -35,7 +49,9 @@ const AddCategory = ({ onAddCategory, onClose }) => {
         </h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block pb-2 text-xl font-medium">Tên thực đơn</label>
+            <label className="block pb-2 text-xl font-medium">
+              Tên thực đơn
+            </label>
             <input
               type="text"
               name="name"
@@ -45,9 +61,12 @@ const AddCategory = ({ onAddCategory, onClose }) => {
               }
               className="w-full rounded-md border border-gray-300 p-2"
             />
+            {error && <p className="text-sm text-red-500">{error}</p>}
           </div>
           <div className="mb-4">
-            <label className="block pb-2 text-xl font-medium">Bật hoạt động</label>
+            <label className="block pb-2 text-xl font-medium">
+              Bật hoạt động
+            </label>
             <select
               name="isActive"
               value={newCategory.isActive}
@@ -62,7 +81,7 @@ const AddCategory = ({ onAddCategory, onClose }) => {
             <button
               type="button"
               onClick={onClose}
-              className="rounded-md w-28 bg-gray-300 px-4 py-2 text-black hover:bg-gray-400"
+              className="w-28 rounded-md bg-gray-300 px-4 py-2 text-black hover:bg-gray-400"
             >
               Hủy
             </button>
@@ -82,6 +101,7 @@ const AddCategory = ({ onAddCategory, onClose }) => {
 AddCategory.propTypes = {
   onAddCategory: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
+  onFetchCategories: PropTypes.func.isRequired, // Thêm prop này
 };
 
 export default AddCategory;

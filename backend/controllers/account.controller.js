@@ -43,6 +43,7 @@ export const createAccount = async (req, res) => {
     if (existingGmail) {
       return res.status(400).json({
         success: false,
+        field: "gmail",
         message: "Gmail đã tồn tại",
       });
     }
@@ -52,6 +53,7 @@ export const createAccount = async (req, res) => {
     if (existingUsername) {
       return res.status(400).json({
         success: false,
+        field: "username",
         message: "Tên đăng nhập đã tồn tại",
       });
     }

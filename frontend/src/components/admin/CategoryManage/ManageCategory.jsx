@@ -19,25 +19,22 @@ const ManageCategory = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      setLoading(true); // Bắt đầu hiển thị loading
-      try {
-        const response = await axios.get(
-          "http://localhost:5000/api/categories",
-          {
-            withCredentials: true,
-          },
-        );
-        setCategories(response.data.data);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      } finally {
-        setLoading(false); // Kết thúc loading sau khi lấy dữ liệu xong
-      }
-    };
+  const fetchCategories = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get("http://localhost:5000/api/categories", {
+        withCredentials: true,
+      });
+      setCategories(response.data.data);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchCategories();
+  useEffect(() => {
+    fetchCategories(); // Lấy danh sách thực đơn khi component load
   }, []);
 
   const filteredCategories = categories.filter((category) =>
@@ -62,12 +59,7 @@ const ManageCategory = () => {
   };
 
   const handleAddCategory = (newCategory) => {
-    axios
-      .post("http://localhost:5000/api/categories", newCategory)
-      .then((response) => {
-        setCategories([...categories, response.data.data]);
-      })
-      .catch((error) => console.error("Error adding category:", error));
+    setCategories([...categories, newCategory]);
   };
 
   const handleUpdateCategory = (updatedCategory) => {
@@ -138,10 +130,10 @@ const ManageCategory = () => {
                 <tbody>
                   {filteredCategories.map((category) => (
                     <tr key={category._id} className="border-b">
-                      <td className="px-4 py-4 text-center font-bold">
+                      <td className="px-4 py-6 text-center font-bold">
                         {category.name}
                       </td>
-                      <td className="px-4 py-4 text-center">
+                      <td className="px-4 py-6 text-center">
                         {new Date(category.createdAt).toLocaleDateString()}
                       </td>
                       <td className="px-4 py-4 text-center">
@@ -192,6 +184,7 @@ const ManageCategory = () => {
         <AddCategory
           onClose={() => setAddFormVisible(false)}
           onAddCategory={handleAddCategory}
+          onFetchCategories={fetchCategories}
         />
       )}
 

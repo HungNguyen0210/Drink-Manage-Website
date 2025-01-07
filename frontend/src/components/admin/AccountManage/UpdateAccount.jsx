@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 
 const UpdateAccount = ({ account, onClose, onUpdateAccount }) => {
   const [updatedAccount, setUpdatedAccount] = useState(account);
+  const [errors, setErrors] = useState({}); // State lưu lỗi
 
   useEffect(() => {
     setUpdatedAccount(account);
@@ -17,12 +18,16 @@ const UpdateAccount = ({ account, onClose, onUpdateAccount }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setErrors({}); // Reset errors trước khi kiểm tra
 
-    if (
-      !updatedAccount.username ||
-      !updatedAccount.role
-    ) {
-      alert("Please fill in all fields.");
+    if (!updatedAccount.username || !updatedAccount.role) {
+      setErrors((prev) => ({
+        ...prev,
+        username: updatedAccount.username
+          ? ""
+          : "Tên tài khoản không được để trống.",
+        role: updatedAccount.role ? "" : "Vai trò không được để trống.",
+      }));
       return;
     }
 
@@ -32,7 +37,7 @@ const UpdateAccount = ({ account, onClose, onUpdateAccount }) => {
         updatedAccount,
         {
           headers: {
-            Authorization: `Bearer ${Cookies.get("token")}`, // Lấy token từ localStorage (nếu có)
+            Authorization: `Bearer ${Cookies.get("token")}`, // Lấy token từ cookie
           },
           withCredentials: true,
         },
@@ -42,7 +47,15 @@ const UpdateAccount = ({ account, onClose, onUpdateAccount }) => {
         onClose();
       })
       .catch((error) => {
-        console.error("There was an error updating the account:", error);
+        if (error.response && error.response.data.message) {
+          // Hiển thị thông báo lỗi từ backend
+          setErrors((prev) => ({
+            ...prev,
+            username: error.response.data.message, // Lỗi từ backend nếu có
+          }));
+        } else {
+          console.error("There was an error updating the account:", error);
+        }
       });
   };
 
@@ -54,7 +67,9 @@ const UpdateAccount = ({ account, onClose, onUpdateAccount }) => {
         </h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block pb-2 text-xl font-medium">Tên tài khoản</label>
+            <label className="block pb-2 text-xl font-medium">
+              Tên tài khoản
+            </label>
             <input
               type="text"
               name="username"
@@ -62,6 +77,9 @@ const UpdateAccount = ({ account, onClose, onUpdateAccount }) => {
               onChange={handleInputChange}
               className="w-full rounded-md border border-gray-300 p-2"
             />
+            {errors.username && (
+              <p className="text-sm text-red-500">{errors.username}</p>
+            )}
           </div>
           <div className="mb-4">
             <label className="block pb-2 text-xl font-medium">Vai trò</label>
@@ -88,7 +106,7 @@ const UpdateAccount = ({ account, onClose, onUpdateAccount }) => {
               type="submit"
               className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
             >
-              Cập nhật 
+              Cập nhật
             </button>
           </div>
         </form>
