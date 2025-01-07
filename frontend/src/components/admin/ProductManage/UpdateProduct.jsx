@@ -17,6 +17,7 @@ const UpdateProduct = ({
     displayHot: 1,
   });
   const [categories, setCategories] = useState([]);
+  const [errors, setErrors] = useState({}); // State lỗi
 
   // Lấy danh sách danh mục
   useEffect(() => {
@@ -67,6 +68,18 @@ const UpdateProduct = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrors({}); // Reset lỗi trước khi kiểm tra
+
+    if (
+      parseFloat(updatedProduct.sell_price) > parseFloat(updatedProduct.price)
+    ) {
+      setErrors((prev) => ({
+        ...prev,
+        sell_price: "Giá giảm phải bé hơn hoặc bằng giá bình thường.", // Thêm lỗi vào state
+      }));
+      return; // Dừng quá trình submit nếu có lỗi
+    }
+
     try {
       const formData = new FormData();
       formData.append("name", updatedProduct.name);
@@ -98,6 +111,12 @@ const UpdateProduct = ({
       setShowModal(false); // Đóng modal
     } catch (error) {
       console.error("Error updating product:", error.response?.data.message);
+      if (error.response?.data.message === "Sản phẩm đã tồn tại") {
+        setErrors((prev) => ({
+          ...prev,
+          name: "Tên sản phẩm đã tồn tại", // Thêm lỗi vào state
+        }));
+      }
     }
   };
 
@@ -124,7 +143,9 @@ const UpdateProduct = ({
                 className="w-full rounded-md border border-gray-300 p-2"
                 required
               />
-
+              {errors.name && (
+                <p className="text-sm text-red-500">{errors.name}</p>
+              )}
               <label className="mt-4 block pb-2 text-xl font-medium">
                 Thực đơn
               </label>
@@ -169,6 +190,9 @@ const UpdateProduct = ({
                 className="w-full rounded-md border border-gray-300 p-2"
                 required
               />
+              {errors.sell_price && (
+                <p className="text-sm text-red-500">{errors.sell_price}</p>
+              )}
 
               <div className="mt-4 flex space-x-4">
                 <div className="w-1/2">

@@ -114,6 +114,7 @@ export const updateProduct = async (req, res) => {
   }
 
   try {
+    // Kiểm tra nếu `category` tồn tại
     if (product.category) {
       const categoryExists = await Category.findById(product.category);
       if (!categoryExists) {
@@ -124,8 +125,10 @@ export const updateProduct = async (req, res) => {
       }
     }
 
+    // Tìm sản phẩm trùng tên nhưng loại trừ sản phẩm hiện tại (dựa trên `_id`)
     const existingProduct = await Product.findOne({
       name: { $regex: new RegExp(`^${product.name}$`, "i") },
+      _id: { $ne: id }, // Loại trừ sản phẩm đang cập nhật
     });
 
     if (existingProduct) {
@@ -135,18 +138,28 @@ export const updateProduct = async (req, res) => {
       });
     }
 
-    // Kiểm tra và cập nhật ảnh nếu có
-    let updatedImagePath = existingProduct.image;
-    if (req.file) {
-      updatedImagePath = req.file.filename;
+    // Lấy sản phẩm hiện tại để giữ lại ảnh cũ nếu không có ảnh mới
+    const currentProduct = await Product.findById(id);
+    if (!currentProduct) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
     }
 
+    let updatedImagePath = currentProduct.image; // Giữ ảnh cũ nếu không có ảnh mới
+    if (req.file) {
+      updatedImagePath = req.file.filename; // Cập nhật ảnh mới nếu có
+    }
+
+    // Cập nhật sản phẩm
     const updatedProduct = await Product.findByIdAndUpdate(
       id,
       { ...product, image: updatedImagePath },
       { new: true }
     ).populate("category", "name");
 
+    // Xử lý đường dẫn ảnh đầy đủ
     const productWithFullImagePath = {
       ...updatedProduct.toObject(),
       image: updatedProduct.image
@@ -156,9 +169,11 @@ export const updateProduct = async (req, res) => {
 
     res.status(200).json({ success: true, data: productWithFullImagePath });
   } catch (error) {
+    console.error("Error updating product:", error.message);
     res.status(500).json({ success: false, message: "Server Error" });
   }
 };
+
 
 export const deleteProduct = async (req, res) => {
   const { id } = req.params;

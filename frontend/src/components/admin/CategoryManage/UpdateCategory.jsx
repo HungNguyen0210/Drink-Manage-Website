@@ -4,9 +4,11 @@ import PropTypes from "prop-types";
 
 const UpdateCategory = ({ category, onClose, onUpdateCategory }) => {
   const [updatedCategory, setUpdatedCategory] = useState(category);
+  const [error, setError] = useState(""); // State để lưu lỗi
 
   useEffect(() => {
     setUpdatedCategory(category);
+    setError(""); // Reset lỗi khi modal mở lại
   }, [category]);
 
   const handleInputChange = (e) => {
@@ -18,18 +20,35 @@ const UpdateCategory = ({ category, onClose, onUpdateCategory }) => {
     e.preventDefault();
 
     if (!updatedCategory.name) {
-      alert("Please fill in all fields.");
+      alert("Vui lòng điền tên thực đơn.");
+      return;
+    }
+
+    // Kiểm tra tên mới có trùng với tên cũ không
+    if (updatedCategory.name === category.name) {
+      setError("Tên thực đơn đã tồn tại. Vui lòng chọn tên khác.");
       return;
     }
 
     axios
-      .put(`http://localhost:5000/api/categories/${updatedCategory._id}`, updatedCategory)
+      .put(
+        `http://localhost:5000/api/categories/${updatedCategory._id}`,
+        updatedCategory,
+      )
       .then((response) => {
-        onUpdateCategory(updatedCategory); 
-        onClose();
+        onUpdateCategory(response.data.data); // Gửi dữ liệu cập nhật lên
+        onClose(); // Đóng modal
       })
       .catch((error) => {
-        console.error("There was an error updating the category:", error);
+        console.error("Có lỗi khi cập nhật danh mục:", error);
+        if (
+          error.response?.status === 400 &&
+          error.response.data?.message === "Category name must be unique"
+        ) {
+          setError("Tên thực đơn đã tồn tại. Vui lòng chọn tên khác."); // Lỗi từ API
+        } else {
+          setError("Đã xảy ra lỗi. Vui lòng thử lại."); // Lỗi chung
+        }
       });
   };
 
@@ -51,6 +70,9 @@ const UpdateCategory = ({ category, onClose, onUpdateCategory }) => {
               onChange={handleInputChange}
               className="w-full rounded-md border border-gray-300 p-2"
             />
+            {error && ( // Hiển thị thông báo lỗi
+              <div className="text-sm text-red-500">{error}</div>
+            )}
           </div>
           <div className="flex justify-between pt-4">
             <button

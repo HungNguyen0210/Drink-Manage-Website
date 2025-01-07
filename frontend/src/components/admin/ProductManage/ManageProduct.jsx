@@ -181,12 +181,17 @@ const ManageProduct = () => {
               Tất cả
             </button>
           </div>
-          <button
-            onClick={() => setShowAddModal(true)}
-            className="rounded-full bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-          >
-            <FontAwesomeIcon icon={faPlus} />
-          </button>
+          <div className="group relative">
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="rounded-full bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+            >
+              <FontAwesomeIcon icon={faPlus} />
+            </button>
+            <span className="absolute bottom-full left-1/2 mb-2 -translate-x-1/2 transform whitespace-nowrap rounded-md bg-gray-800 px-4 py-2 text-sm text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
+              Tạo sản phẩm
+            </span>
+          </div>
         </div>
 
         {/* Component AddProduct */}

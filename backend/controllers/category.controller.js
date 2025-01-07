@@ -57,22 +57,23 @@ export const updateCategory = async (req, res) => {
   }
 
   try {
+    // Kiểm tra tên trùng lặp
+    const existingCategory = await Category.findOne({
+      name: name,
+      _id: { $ne: id }, // Loại trừ danh mục đang được cập nhật
+    });
+
+    if (existingCategory) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Category name must be unique" });
+    }
+
     const updatedCategory = await Category.findByIdAndUpdate(
       id,
       { name, isActive },
       { new: true }
     );
-
-    const existingCategory = await Category.findOne({
-      name: { $regex: new RegExp(`^${name}$`, "i") },
-    });
-
-    if (existingCategory) {
-      return res.status(400).json({
-        success: false,
-        message: "Sản phẩm đã tồn tại",
-      });
-    }
 
     if (!updatedCategory) {
       return res.status(404).json({
@@ -83,11 +84,6 @@ export const updateCategory = async (req, res) => {
 
     res.status(200).json({ success: true, data: updatedCategory });
   } catch (error) {
-    if (error.code === 11000) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Category name must be unique" });
-    }
     console.error("Error in updating category: ", error.message);
     res.status(500).json({ success: false, message: "Server Error" });
   }
