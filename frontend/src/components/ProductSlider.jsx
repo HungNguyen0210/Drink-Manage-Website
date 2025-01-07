@@ -117,7 +117,7 @@ const ProductSlider = () => {
                     />
                   </Link>
                 </div>
-                <div className="product-bubble absolute right-4 top-2 rounded-full bg-[#ff4d4f] px-2 py-1 font-josefin text-sm text-white">
+                <div className="product-bubble absolute right-4 top-2 rounded-full bg-[#ff4d4f] px-2 pt-2 pb-1 font-josefin text-sm text-white">
                   HOT
                 </div>
                 <div className="product-info mb-10 mt-2">
