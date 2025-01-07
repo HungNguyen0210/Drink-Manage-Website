@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
+import { decodeJWT } from "../utils/jwtUtils";
 
 const Review = ({ productId }) => {
   const [reviews, setReviews] = useState([]);
@@ -12,7 +13,7 @@ const Review = ({ productId }) => {
     rate: 0,
   });
   const [showForm, setShowForm] = useState(false);
-
+  const [accountData, setAccountData] = useState(null);
   // Fetch reviews from API
   useEffect(() => {
     const fetchReviews = async () => {
@@ -39,6 +40,34 @@ const Review = ({ productId }) => {
     fetchReviews();
   }, [productId]);
 
+  useEffect(() => {
+    const fetchAccountData = async () => {
+      try {
+        const token = Cookies.get("jwtToken");
+        const decoded = decodeJWT(token);
+        const accountId = decoded?.id;
+
+        if (accountId) {
+          const response = await axios.get(
+            `http://localhost:5000/api/accounts/${accountId}`,
+          );
+          setAccountData(response.data.data);
+
+          // Điền sẵn thông tin vào form
+          setFormData((prevFormData) => ({
+            ...prevFormData,
+            name: response.data.data.username || "",
+            email: response.data.data.gmail || "",
+          }));
+        }
+      } catch (error) {
+        console.error("Lỗi khi lấy thông tin tài khoản:", error);
+      }
+    };
+
+    fetchAccountData();
+  }, []);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -52,11 +81,6 @@ const Review = ({ productId }) => {
     e.preventDefault();
 
     const jwtToken = Cookies.get("jwtToken"); // Lấy token từ Cookies
-
-    if (!jwtToken) {
-      toast.error("Bạn cần đăng nhập để gửi đánh giá!");
-      return;
-    }
 
     if (!jwtToken) {
       toast.error("Bạn cần đăng nhập để gửi đánh giá!");
@@ -233,7 +257,8 @@ const Review = ({ productId }) => {
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
-                    className="mt-4 block w-full border-2 p-3 font-josefin text-lg"
+                    readOnly
+                    className="mt-4 block w-full cursor-not-allowed border-2 bg-gray-100 p-3 font-josefin text-lg"
                   />
                 </label>
               </div>

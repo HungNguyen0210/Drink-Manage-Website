@@ -124,11 +124,15 @@ export const updateProduct = async (req, res) => {
       }
     }
 
-    const existingProduct = await Product.findById(id);
-    if (!existingProduct) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Product not found" });
+    const existingProduct = await Product.findOne({
+      name: { $regex: new RegExp(`^${product.name}$`, "i") },
+    });
+
+    if (existingProduct) {
+      return res.status(400).json({
+        success: false,
+        message: "Sản phẩm đã tồn tại",
+      });
     }
 
     // Kiểm tra và cập nhật ảnh nếu có

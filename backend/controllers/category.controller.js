@@ -63,6 +63,17 @@ export const updateCategory = async (req, res) => {
       { new: true }
     );
 
+    const existingCategory = await Category.findOne({
+      name: { $regex: new RegExp(`^${name}$`, "i") },
+    });
+
+    if (existingCategory) {
+      return res.status(400).json({
+        success: false,
+        message: "Sản phẩm đã tồn tại",
+      });
+    }
+
     if (!updatedCategory) {
       return res.status(404).json({
         success: false,
