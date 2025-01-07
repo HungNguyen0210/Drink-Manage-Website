@@ -21,7 +21,7 @@ export const sendInvoiceEmail = async (customerEmail, invoiceDetails) => {
       .map(
         (item) => `
     <tr>
-        <td style="padding: 8px; border: 1px solid #ddd;">
+        <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">
         ${item.product.name}
         </td>
         <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${
@@ -60,7 +60,11 @@ export const sendInvoiceEmail = async (customerEmail, invoiceDetails) => {
             Giảm giá: <strong>${discount.toLocaleString("vi-VN")} đ</strong>
           </p>
         `
-            : ""
+            : `
+          <p style="margin-top: 20px; font-size: 16px;">
+            Giảm giá: <strong>${discount.toLocaleString("vi-VN")} đ</strong>
+          </p>
+        `
         }
 
         <p style="font-size: 16px;">
