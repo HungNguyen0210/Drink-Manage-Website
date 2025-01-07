@@ -4,7 +4,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import LoadingWhite from "../../../components/website/LoadingWhite";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPaperPlane} from "@fortawesome/free-solid-svg-icons";
+import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
 const ManageNewsletter = () => {
   const [newsletters, setNewsletters] = useState([]);
@@ -249,7 +249,8 @@ const ManageNewsletter = () => {
               <thead className="bg-gray-100">
                 <tr>
                   <th className="w-1/3 px-4 py-3 text-center">Chọn</th>
-                  <th className="w-2/3 px-4 py-3 text-left">Email</th>
+                  <th className="w-1/3 px-4 py-3 text-left">Email</th>
+                  <th className="w-1/3 px-4 py-3 text-right">Ngày gửi</th>
                 </tr>
               </thead>
             </table>
@@ -271,6 +272,9 @@ const ManageNewsletter = () => {
                       <td className="w-2/3 px-4 py-6 font-bold">
                         {newsletter.gmail}
                       </td>
+                      <td className="w-1/3 px-4 py-6 font-bold">
+                        {new Date(newsletter.createdAt).toLocaleDateString()}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -288,7 +292,7 @@ const ManageNewsletter = () => {
             onChange={handleCouponSelect}
           />
           <button
-            className={`ml-4 px-8 py-1 text-white text-2xl transition-transform duration-200 hover:scale-95 ${
+            className={`ml-4 px-8 py-1 text-2xl text-white transition-transform duration-200 hover:scale-95 ${
               isSending ? "cursor-not-allowed bg-black" : "bg-black"
             }`}
             onClick={handleSendCoupon}
