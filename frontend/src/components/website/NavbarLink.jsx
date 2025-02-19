@@ -7,20 +7,20 @@ const NavbarLink = () => {
   return (
     <div className="w-full">
       <ul className="navbar-links flex flex-col items-start justify-center sm:flex-row sm:space-x-8 sm:space-y-0 sm:pl-8">
-        <li className="w-full border-t-[1px] border-gray-300 py-4 sm:w-max sm:border-none sm:py-0">
+        <li className="w-full border-t-[1px] border-gray-200 py-4 sm:w-max sm:border-none sm:py-0">
           <FlyoutLink href="/home">TRANG CHỦ</FlyoutLink>
         </li>
-        <li className="w-full border-b-[1px] border-t-[1px] border-gray-300 py-4 sm:w-max sm:border-none sm:py-0">
+        <li className="w-full border-b-[1px] border-t-[1px] border-gray-200 py-4 sm:w-max sm:border-none sm:py-0">
           <FlyoutLink href="/menu" FlyoutContent={PricingContentMenu}>
             THỰC ĐƠN
           </FlyoutLink>
         </li>
-        <li className="w-full border-b-[1px] border-gray-300 py-4 sm:w-max sm:border-none sm:py-0">
+        <li className="w-full border-b-[1px] border-gray-200 py-4 sm:w-max sm:border-none sm:py-0">
           <FlyoutLinkNews href="/news" FlyoutContent={PricingContentNew}>
             TIN TỨC
           </FlyoutLinkNews>
         </li>
-        <li className="w-full border-b-[1px] border-gray-300 py-4 sm:w-max sm:border-none sm:py-0">
+        <li className="w-full border-b-[1px] border-gray-200 py-4 sm:w-max sm:border-none sm:py-0">
           <FlyoutLink href="/address">ĐỊA CHỈ</FlyoutLink>
         </li>
       </ul>

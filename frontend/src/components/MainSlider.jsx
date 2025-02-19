@@ -4,10 +4,10 @@ const MainSlider = () => {
   return (
     <div className="flex flex-col-reverse items-center justify-center gap-x-0 lg:flex-row">
       <div className="content mb-8 mt-8 px-4 text-[#633c02] lg:ml-32 lg:mt-8">
-        <h1 className="animated-title mb-3 text-4xl font-bold lg:text-5xl">
+        <h1 className="animated-title mb-3 text-3xl font-bold lg:text-5xl">
           ĐÔNG ĐẾN GIẢM 30%
         </h1>
-        <h4 className="mb-6 font-josefin text-2xl">
+        <h4 className="mb-6 font-josefin text-xl">
           Áp dụng cho học sinh sinh viên
         </h4>
         <a

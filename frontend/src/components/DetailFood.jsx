@@ -137,7 +137,7 @@ const DetailFood = () => {
     <div className="mx-auto w-full max-w-[1200px] pb-16 pt-8">
       <div className="flex flex-col md:flex-row">
         {/* Left Section */}
-        <div className="w-full scale-90 cursor-pointer overflow-hidden rounded-lg md:w-[350px]">
+        <div className="w-full scale-90 cursor-pointer overflow-hidden rounded-lg md:w-[300px]">
           <img
             src={product.image}
             alt={product.name}
@@ -148,7 +148,7 @@ const DetailFood = () => {
         {/* Center Section */}
         <div className="items-center justify-center pt-14 md:px-16 md:pt-16">
           <div className="text-center md:text-left">
-            <h1 className="w-[393px] pb-4 pl-2 font-josefin text-5xl font-bold text-[#00561e] md:pl-0">
+            <h1 className="w-[370px] lg:w-[393px] pb-4 px-1 font-josefin text-5xl font-bold text-[#00561e] md:pl-0">
               {product.name}
             </h1>
             <p>
@@ -161,7 +161,7 @@ const DetailFood = () => {
                 </span>
               )}
             </p>
-            <div className="mb-2 h-[1px] w-full bg-gray-300"></div>
+            <div className="mb-4 mt-2 lg:mt-0 lg:mb-2 h-[1px] w-full bg-gray-300"></div>
             <span className="font-josefin-sans text-lg font-semibold">
               Số lượng:
             </span>
@@ -187,7 +187,7 @@ const DetailFood = () => {
               </button>
             </div>
             <button
-              className="mt-4 w-[393px] cursor-pointer rounded-full bg-gradient-to-r from-[#00864a] to-[#925802] pb-3 pt-4 font-josefin text-[28px] font-bold text-white transition-transform duration-200 hover:scale-95"
+              className="mt-6 lg:mt-4 w-[330px] lg:w-[393px] cursor-pointer rounded-full bg-gradient-to-r from-[#00864a] to-[#925802] pb-3 pt-4 font-josefin text-[28px] font-bold text-white transition-transform duration-200 hover:scale-95"
               onClick={handleAddToCart}
             >
               <FontAwesomeIcon icon={faBasketShopping} /> Thêm vào giỏ
@@ -196,7 +196,7 @@ const DetailFood = () => {
         </div>
 
         {/* Right Section */}
-        <div className="w-[400px] pl-2 pt-16 md:w-[290px]">
+        <div className="lg:w-[400px] w-[360px] pl-6 lg:pl-2 pt-16 md:w-[290px]">
           <h3 className="text-center font-josefin text-3xl font-bold text-[#663402] md:text-start">
             Danh mục thực đơn
           </h3>

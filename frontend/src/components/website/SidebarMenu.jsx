@@ -36,7 +36,7 @@ const SidebarMenu = ({ isMobileMenuOpen, toggleMobileMenu }) => {
         <div className="flex flex-col pt-10">
           {/* Make the links stack vertically with space between them */}
           <ul className="navbar-links items-start justify-center sm:flex-row sm:space-x-8 sm:py-4">
-            <li className="w-full border-t-[1px] border-gray-300 py-3 sm:border-none sm:py-0">
+            <li className="w-full border-t-[1px] border-gray-200 py-3 sm:border-none sm:py-0">
               <p className="pl-8 font-josefin text-2xl font-bold">
                 Gọi đặt bàn
               </p>

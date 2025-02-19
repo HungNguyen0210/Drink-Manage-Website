@@ -68,7 +68,7 @@ const ModalProduct = ({
     <div className="fixed left-0 top-0 z-50 flex h-screen w-screen items-center justify-center bg-black bg-opacity-50">
       <div className="relative flex w-[90%] max-w-[900px] flex-col overflow-hidden rounded-lg bg-white shadow-lg md:h-[435px] md:flex-row md:items-center md:justify-between">
         {/* Left Section */}
-        <div className="flex w-full items-center justify-center p-5 md:w-1/2">
+        <div className="flex w-full items-center justify-center lg:p-5 md:w-1/2">
           <img
             src={selectedProduct.image}
             alt={selectedProduct.name}
@@ -77,8 +77,8 @@ const ModalProduct = ({
         </div>
 
         {/* Right Section */}
-        <div className="flex w-full flex-col gap-4 p-5 md:mb-auto md:mr-10 md:mt-auto md:w-1/2">
-          <h1 className="flex flex-col text-left text-4xl font-bold text-[#00561e] md:items-start md:pb-6">
+        <div className="flex w-full flex-col gap-4 lg:p-5 px-5 lg:px-0 md:mb-auto md:mr-10 md:mt-auto md:w-1/2">
+          <h1 className="flex flex-col lg:text-left text-center text-4xl font-bold text-[#00561e] md:items-start md:pb-6">
             {selectedProduct.name}
           </h1>
           <p className="flex flex-col items-center gap-2 md:flex-row">
@@ -119,7 +119,7 @@ const ModalProduct = ({
             </div>
           </div>
           <button
-            className="mt-4 h-14 w-full rounded-full bg-gradient-to-r from-[#00864a] to-[#925802] text-2xl font-bold text-white transition-transform duration-200 hover:scale-95"
+            className="mt-0 mb-4 lg:mb-0 lg:mt-4 h-14 w-full rounded-full bg-gradient-to-r from-[#00864a] to-[#925802] text-2xl font-bold text-white transition-transform duration-200 hover:scale-95"
             onClick={handleAddToCart}
           >
             <FontAwesomeIcon icon={faBasketShopping} /> Thêm vào giỏ

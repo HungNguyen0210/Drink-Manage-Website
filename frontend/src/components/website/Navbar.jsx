@@ -50,7 +50,7 @@ const Navbar = () => {
 
   return (
     <nav className="sticky top-0 z-20 flex h-[80px] items-center justify-between bg-white px-4 py-4 shadow-lg sm:px-8 md:px-16 lg:px-32">
-      <a href="/home" className="pl-4 text-3xl font-bold sm:pl-0 sm:text-4xl">
+      <a href="/home" className="pl-1 text-2xl font-bold sm:pl-0 sm:text-4xl">
         <span className="text-black">Bamos</span>
         <span className="text-[#c63402]">Coffee</span>
       </a>
@@ -74,7 +74,7 @@ const Navbar = () => {
         </a>
       </div>
       <div className="item flex">
-        <div className="flex items-end text-[27px] sm:hidden">
+        <div className="flex items-end text-[27px] sm:hidden pl-3">
           <button onClick={toggleMobileMenu}>
             <FontAwesomeIcon icon={faBars} />
           </button>

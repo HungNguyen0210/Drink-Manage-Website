@@ -74,7 +74,7 @@ export const sendOTP = async (req, res) => {
 
     // Cấu hình email
     const mailOptions = {
-      from: process.env.SMTP_USER, // Địa chỉ email gửi
+      from: `"BamosCoffee" <${process.env.SMTP_USER}>`, // Địa chỉ email gửi
       to: email, // Email người nhận
       subject: "Mã OTP xác thực của bạn",
       html: `Mã OTP của bạn là: <strong>${otp}</strong>. Mã này có hiệu lực trong 10 phút.`,

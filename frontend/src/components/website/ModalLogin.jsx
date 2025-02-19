@@ -128,13 +128,13 @@ const LoginPage = () => {
       <div className="w-full max-w-md rounded-lg bg-white p-8 text-center">
         <div className="mb-8 flex justify-center">
           <h2
-            className={`w-1/2 cursor-pointer px-4 py-2 font-josefin text-2xl font-bold ${!isRegisterMode ? "border-b-2 border-black" : "text-gray-500"}`}
+            className={`w-1/2 cursor-pointer px-4 py-2 font-josefin text-xl lg:text-2xl font-bold ${!isRegisterMode ? "border-b-2 border-black" : "text-gray-500"}`}
             onClick={() => setRegisterMode(false)}
           >
             Đăng Nhập
           </h2>
           <h2
-            className={`w-1/2 cursor-pointer px-4 py-2 font-josefin text-2xl font-bold ${isRegisterMode ? "border-b-2 border-black" : "text-gray-500"}`}
+            className={`w-1/2 cursor-pointer px-4 py-2 font-josefin text-xl lg:text-2xl font-bold ${isRegisterMode ? "border-b-2 border-black" : "text-gray-500"}`}
             onClick={() => setRegisterMode(true)}
           >
             Đăng Ký

@@ -61,7 +61,7 @@ const RelatedProduct = ({ productId }) => {
 
   return (
     <div
-      className="product-slider relative mx-auto mb-20 max-w-screen-xl overflow-visible bg-white px-5"
+      className="product-slider relative mx-auto mb-20 max-w-screen-xl overflow-visible bg-white px-4"
       ref={ref}
       onMouseEnter={() => setShowArrows(true)}
       onMouseLeave={() => setShowArrows(false)}
@@ -85,7 +85,7 @@ const RelatedProduct = ({ productId }) => {
             nextEl: ".swiper-button-next",
           }}
           breakpoints={{
-            430: { slidesPerView: 2 },
+            375: { slidesPerView: 2 },
             768: { slidesPerView: 3 },
             1024: { slidesPerView: 5 },
           }}
@@ -119,7 +119,7 @@ const RelatedProduct = ({ productId }) => {
                   </Link>
                 </div>
                 <div className="product-info mb-10 mt-2">
-                  <h6 className="product-name font-josefin text-xl font-bold text-[#00561e]">
+                  <h6 className="product-name font-josefin line-clamp-1 text-xl font-bold text-[#00561e]">
                     <Link to={`/detailfood/${product._id}`}>
                       {product.name.split(" ").slice(0, 4).join(" ")}
                       {/* Giới hạn 20 từ */}
@@ -130,11 +130,11 @@ const RelatedProduct = ({ productId }) => {
 
                   <div className="product-price">
                     <span className="font-josefin text-base font-bold text-[#9d6817]">
-                      {product.sell_price.toLocaleString()} đ
+                      {product.sell_price.toLocaleString()}đ
                     </span>
                     {product.price !== product.sell_price && (
                       <span className="price-old ml-2 text-sm font-bold text-[#999] line-through">
-                        {product.price.toLocaleString()} đ
+                        {product.price.toLocaleString()}đ
                       </span>
                     )}
                   </div>

@@ -480,7 +480,7 @@ const PaymentPage = () => {
           <h3 className="name-option-payment mb-2 pt-4 font-josefin text-4xl text-[32px] font-bold">
             Thông tin sản phẩm
           </h3>
-          <div className="mb-4 max-h-[580px] overflow-y-auto rounded-lg bg-white p-4">
+          <div className="mb-4 max-h-[580px] overflow-y-auto rounded-lg bg-white lg:p-4">
             {cartItems.map((item) => (
               <div
                 key={item.productId}
@@ -493,7 +493,7 @@ const PaymentPage = () => {
                     className="h-20% w-20% rounded-lg object-cover"
                   />
                 </div>
-                <div className="w-3/5 px-4 sm:w-[250px]">
+                <div className="w-3/5 pl-4 lg:pl-0 lg:px-4 sm:w-[250px]">
                   <span className="block truncate font-josefin text-2xl font-bold text-[#00561e]">
                     {item.name}
                   </span>
@@ -553,10 +553,10 @@ const PaymentPage = () => {
             />
             <button
               type="button"
-              className="apply-coupon-btn h-12 w-1/3 rounded-full bg-black text-white transition-transform duration-200 hover:scale-95"
+              className="apply-coupon-btn h-12 w-1/3 rounded-full font-josefin bg-black text-white transition-transform duration-200 hover:scale-95"
               onClick={handleApplyCoupon}
             >
-              Apply coupon
+              Nhập mã
             </button>
           </div>
           <div className="mb-[5px] flex justify-between font-josefin text-[18px] font-semibold">

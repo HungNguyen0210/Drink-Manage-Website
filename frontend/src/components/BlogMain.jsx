@@ -66,7 +66,7 @@ const BlogMain = () => {
             slidesPerView="auto"
             loop={false}
             breakpoints={{
-              430: { slidesPerView: 1.3 },
+              375: { slidesPerView: 1.3 },
               768: { slidesPerView: 2.2 },
               1024: { slidesPerView: 3.3 },
             }}
